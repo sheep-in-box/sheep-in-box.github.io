@@ -5,7 +5,11 @@
 }
 .aplayer.aplayer-fixed .aplayer-lrc:after,
 .aplayer.aplayer-fixed .aplayer-lrc:before {
-  display: none;
+  background: none !important;
+}
+.aplayer .aplayer-lrc:after,
+.aplayer .aplayer-lrc:before {
+  display: none !important;
 }
 .aplayer.aplayer.aplayer-fixed .aplayer-body {
   background: rgba(255,255,255,0.6) !important;
@@ -69,6 +73,9 @@
 }
 [data-user-color-scheme="dark"] .aplayer .aplayer-list ol li .aplayer-list-author {
   color: #d4d4d4;
+}
+[data-user-color-scheme="dark"] .aplayer-lrc:before {
+  display: none;
 }
 .anchorjs-link {
   text-decoration: none !important;
