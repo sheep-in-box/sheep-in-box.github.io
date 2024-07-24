@@ -229,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          824 字
+          980 字
         
       </span>
     
@@ -240,7 +240,7 @@
         
         
         
-          7 分钟
+          9 分钟
         
       </span>
     
@@ -294,120 +294,120 @@
 <li><strong>一致性问题</strong>：多个系统处理消息可能成功可能不成功，造成数据不一致。</li>
 </ul>
 <h2 id="Go使用RabbitMQ"><a href="#Go使用RabbitMQ" class="headerlink" title="Go使用RabbitMQ"></a>Go使用RabbitMQ</h2><p>首先，安装rabbitmq</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">choco <span class="token function">install</span> rabbitmq<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">choco install rabbitmq</code></pre></div></figure>
 
 <p>安装后，会自动启动服务，默认运行在本地<code>5672</code>端口，管理界面为<code>localhost:15672</code>，默认用户和密码均为guest<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724144435282.png" srcset="/img/loading.gif" lazyload><br>接下来用go编写两段程序<code>send.go</code>和<code>receive.go</code>模拟消息发送方和接收方。</p>
 <p><code>send.go</code>:</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
 
-<span class="token keyword">import</span> <span class="token punctuation">(</span>
-	<span class="token string">"context"</span>
-	<span class="token string">"log"</span>
-	<span class="token string">"time"</span>
+import (
+	&quot;context&quot;
+	&quot;log&quot;
+	&quot;time&quot;
 
-	amqp <span class="token string">"github.com/rabbitmq/amqp091-go"</span>
-<span class="token punctuation">)</span>
+	amqp &quot;github.com&#x2F;rabbitmq&#x2F;amqp091-go&quot;
+)
 
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token comment">// 连接到RabbitMQ服务器（broker）</span>
-	conn<span class="token punctuation">,</span> err <span class="token operator">:=</span> amqp<span class="token punctuation">.</span><span class="token function">Dial</span><span class="token punctuation">(</span><span class="token string">"amqp://guest:guest@localhost:5672/"</span><span class="token punctuation">)</span>
-	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"connection.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">defer</span> conn<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token comment">// 创建channel（amqp.Channel）</span>
-	ch<span class="token punctuation">,</span> err <span class="token operator">:=</span> conn<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"channel.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">defer</span> ch<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+func main() &#123;
+	&#x2F;&#x2F; 连接到RabbitMQ服务器（broker）
+	conn, err :&#x3D; amqp.Dial(&quot;amqp:&#x2F;&#x2F;guest:guest@localhost:5672&#x2F;&quot;)
+	if err !&#x3D; nil &#123;
+		log.Fatalf(&quot;connection.open: %s&quot;, err)
+	&#125;
+	defer conn.Close()
+	&#x2F;&#x2F; 创建channel（amqp.Channel）
+	ch, err :&#x3D; conn.Channel()
+	if err !&#x3D; nil &#123;
+		log.Fatalf(&quot;channel.open: %s&quot;, err)
+	&#125;
+	defer ch.Close()
 
-	<span class="token comment">// 声明一个队列</span>
-	ch<span class="token punctuation">.</span><span class="token function">QueueDeclare</span><span class="token punctuation">(</span>
-		<span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token comment">// 队列名称，若该队列不存在则创建</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// durable</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// delete when unused</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// exclusive</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// no-wait</span>
-		<span class="token boolean">nil</span><span class="token punctuation">,</span>     <span class="token comment">// arguments</span>
-	<span class="token punctuation">)</span>
+	&#x2F;&#x2F; 声明一个队列
+	ch.QueueDeclare(
+		&quot;hello&quot;, &#x2F;&#x2F; 队列名称，若该队列不存在则创建
+		false,   &#x2F;&#x2F; durable
+		false,   &#x2F;&#x2F; delete when unused
+		false,   &#x2F;&#x2F; exclusive
+		false,   &#x2F;&#x2F; no-wait
+		nil,     &#x2F;&#x2F; arguments
+	)
 
-	<span class="token comment">// 发送消息到队列，超时时间设为2秒</span>
-	ctx<span class="token punctuation">,</span> cancel <span class="token operator">:=</span> context<span class="token punctuation">.</span><span class="token function">WithTimeout</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">Background</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token operator">*</span>time<span class="token punctuation">.</span>Second<span class="token punctuation">)</span>
-	<span class="token keyword">defer</span> <span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 带超时context的固定写法</span>
-	msg <span class="token operator">:=</span> <span class="token string">"Hello World!"</span>
-	ch<span class="token punctuation">.</span><span class="token function">PublishWithContext</span><span class="token punctuation">(</span>
-		ctx<span class="token punctuation">,</span>
-		<span class="token string">""</span><span class="token punctuation">,</span>      <span class="token comment">// exchange</span>
-		<span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token comment">// exchange为空时，key为队列名称</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// mandatory</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// immediate</span>
-		amqp<span class="token punctuation">.</span>Publishing<span class="token punctuation">&#123;</span> <span class="token comment">// 消息内容</span>
-			ContentType<span class="token punctuation">:</span> <span class="token string">"text/plain"</span><span class="token punctuation">,</span> <span class="token comment">// MIME content type</span>
-			Body<span class="token punctuation">:</span>        <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">,</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-	<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+	&#x2F;&#x2F; 发送消息到队列，超时时间设为2秒
+	ctx, cancel :&#x3D; context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel() &#x2F;&#x2F; 带超时context的固定写法
+	msg :&#x3D; &quot;Hello World!&quot;
+	ch.PublishWithContext(
+		ctx,
+		&quot;&quot;,      &#x2F;&#x2F; exchange
+		&quot;hello&quot;, &#x2F;&#x2F; exchange为空时，key为队列名称
+		false,   &#x2F;&#x2F; mandatory
+		false,   &#x2F;&#x2F; immediate
+		amqp.Publishing&#123; &#x2F;&#x2F; 消息内容
+			ContentType: &quot;text&#x2F;plain&quot;, &#x2F;&#x2F; MIME content type
+			Body:        []byte(msg),
+		&#125;,
+	)
+&#125;
+</code></pre></div></figure>
 
 <p><code>receive.go</code></p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
 
-<span class="token keyword">import</span> <span class="token punctuation">(</span>
-	<span class="token string">"log"</span>
+import (
+	&quot;log&quot;
 
-	amqp <span class="token string">"github.com/rabbitmq/amqp091-go"</span>
-<span class="token punctuation">)</span>
+	amqp &quot;github.com&#x2F;rabbitmq&#x2F;amqp091-go&quot;
+)
 
-<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token comment">// 连接到RabbitMQ服务器（broker）</span>
-	conn<span class="token punctuation">,</span> err <span class="token operator">:=</span> amqp<span class="token punctuation">.</span><span class="token function">Dial</span><span class="token punctuation">(</span><span class="token string">"amqp://guest:guest@localhost:5672/"</span><span class="token punctuation">)</span>
-	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"connection.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">defer</span> conn<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token comment">// 创建channel（amqp.Channel）</span>
-	ch<span class="token punctuation">,</span> err <span class="token operator">:=</span> conn<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"channel.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">defer</span> ch<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+func main() &#123;
+	&#x2F;&#x2F; 连接到RabbitMQ服务器（broker）
+	conn, err :&#x3D; amqp.Dial(&quot;amqp:&#x2F;&#x2F;guest:guest@localhost:5672&#x2F;&quot;)
+	if err !&#x3D; nil &#123;
+		log.Fatalf(&quot;connection.open: %s&quot;, err)
+	&#125;
+	defer conn.Close()
+	&#x2F;&#x2F; 创建channel（amqp.Channel）
+	ch, err :&#x3D; conn.Channel()
+	if err !&#x3D; nil &#123;
+		log.Fatalf(&quot;channel.open: %s&quot;, err)
+	&#125;
+	defer ch.Close()
 
-	<span class="token comment">// 声明一个队列，这里不需要声明队列，因为send.go已经声明过了</span>
-	<span class="token comment">// 如果声明队列参数不一致，会报错</span>
-	<span class="token comment">// ch.QueueDeclare(</span>
-	<span class="token comment">// 	"hello", // 队列名称，若该队列不存在则创建</span>
-	<span class="token comment">// 	false,   // durable</span>
-	<span class="token comment">// 	false,   // delete when unused</span>
-	<span class="token comment">// 	false,   // exclusive</span>
-	<span class="token comment">// 	false,   // no-wait</span>
-	<span class="token comment">// 	nil,     // arguments</span>
-	<span class="token comment">// )</span>
+	&#x2F;&#x2F; 声明一个队列，这里不需要声明队列，因为send.go已经声明过了
+	&#x2F;&#x2F; 如果声明队列参数不一致，会报错
+	&#x2F;&#x2F; ch.QueueDeclare(
+	&#x2F;&#x2F; 	&quot;hello&quot;, &#x2F;&#x2F; 队列名称，若该队列不存在则创建
+	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; durable
+	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; delete when unused
+	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; exclusive
+	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; no-wait
+	&#x2F;&#x2F; 	nil,     &#x2F;&#x2F; arguments
+	&#x2F;&#x2F; )
 
-	<span class="token comment">// 接收消息，返回go语言原生channel（只读）</span>
-	deliverieCh<span class="token punctuation">,</span> err <span class="token operator">:=</span> ch<span class="token punctuation">.</span><span class="token function">Consume</span><span class="token punctuation">(</span>
-		<span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token comment">// queue</span>
-		<span class="token string">""</span><span class="token punctuation">,</span>      <span class="token comment">// consumer</span>
-		<span class="token boolean">true</span><span class="token punctuation">,</span>    <span class="token comment">// auto-ack</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// exclusive</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// no-local</span>
-		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// no-wait</span>
-		<span class="token boolean">nil</span><span class="token punctuation">,</span>     <span class="token comment">// args</span>
-	<span class="token punctuation">)</span>
-	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"basic.consume: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
+	&#x2F;&#x2F; 接收消息，返回go语言原生channel（只读）
+	deliverieCh, err :&#x3D; ch.Consume(
+		&quot;hello&quot;, &#x2F;&#x2F; queue
+		&quot;&quot;,      &#x2F;&#x2F; consumer
+		true,    &#x2F;&#x2F; auto-ack
+		false,   &#x2F;&#x2F; exclusive
+		false,   &#x2F;&#x2F; no-local
+		false,   &#x2F;&#x2F; no-wait
+		nil,     &#x2F;&#x2F; args
+	)
+	if err !&#x3D; nil &#123;
+		log.Fatalf(&quot;basic.consume: %s&quot;, err)
+	&#125;
 
-	<span class="token comment">// 从deliverieCh中读取消息</span>
-	<span class="token keyword">for</span> delivery <span class="token operator">:=</span> <span class="token keyword">range</span> deliverieCh <span class="token punctuation">&#123;</span>
-		log<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"Received a message: %s"</span><span class="token punctuation">,</span> delivery<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+	&#x2F;&#x2F; 从deliverieCh中读取消息
+	for delivery :&#x3D; range deliverieCh &#123;
+		log.Printf(&quot;Received a message: %s&quot;, delivery.Body)
+	&#125;
+&#125;
+</code></pre></div></figure>
 
 <p>运行<code>send.go</code>后可以在管理页面看到创建了一个队列。<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151614453.png" srcset="/img/loading.gif" lazyload></p>
 <p>运行<code>receive.go</code>后可以看到打印出接收到的消息。程序并没有结束运行，因为<code>deliverieCh</code>并没有关闭，所以consumer进程会一直阻塞等待下一条消息的到来。</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">2024&#x2F;07&#x2F;24 15:16:48 Received a message: Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">2024&#x2F;07&#x2F;24 15:16:48 Received a message: Hello World!</code></pre></div></figure>
 
 <p>回到管理页面可以看到该消息队列多了一个consumer<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151916476.png" srcset="/img/loading.gif" lazyload></p>
 <p>按下<kbd>Ctrl</kbd>+<kbd>C</kbd>结束consumer进程，可以看到该队列下的consumer没有了（就不截图了）。</p>
@@ -733,6 +733,10 @@
   });
 </script>
 
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/components/prism-core.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" ></script>
 
   <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
 
