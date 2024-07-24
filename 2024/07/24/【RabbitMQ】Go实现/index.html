@@ -48,6 +48,8 @@
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
   <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
@@ -227,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          866 字
+          824 字
         
       </span>
     
@@ -238,7 +240,7 @@
         
         
         
-          8 分钟
+          7 分钟
         
       </span>
     
@@ -292,18 +294,120 @@
 <li><strong>一致性问题</strong>：多个系统处理消息可能成功可能不成功，造成数据不一致。</li>
 </ul>
 <h2 id="Go使用RabbitMQ"><a href="#Go使用RabbitMQ" class="headerlink" title="Go使用RabbitMQ"></a>Go使用RabbitMQ</h2><p>首先，安装rabbitmq</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">choco install rabbitmq<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">choco <span class="token function">install</span> rabbitmq<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <p>安装后，会自动启动服务，默认运行在本地<code>5672</code>端口，管理界面为<code>localhost:15672</code>，默认用户和密码均为guest<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724144435282.png" srcset="/img/loading.gif" lazyload><br>接下来用go编写两段程序<code>send.go</code>和<code>receive.go</code>模拟消息发送方和接收方。</p>
 <p><code>send.go</code>:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;context&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br><br>	amqp <span class="hljs-string">&quot;github.com/rabbitmq/amqp091-go&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// 连接到RabbitMQ服务器（broker）</span><br>	conn, err := amqp.Dial(<span class="hljs-string">&quot;amqp://guest:guest@localhost:5672/&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;connection.open: %s&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> conn.Close()<br>	<span class="hljs-comment">// 创建channel（amqp.Channel）</span><br>	ch, err := conn.Channel()<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;channel.open: %s&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> ch.Close()<br><br>	<span class="hljs-comment">// 声明一个队列</span><br>	ch.QueueDeclare(<br>		<span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-comment">// 队列名称，若该队列不存在则创建</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// durable</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// delete when unused</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// exclusive</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// no-wait</span><br>		<span class="hljs-literal">nil</span>,     <span class="hljs-comment">// arguments</span><br>	)<br><br>	<span class="hljs-comment">// 发送消息到队列，超时时间设为2秒</span><br>	ctx, cancel := context.WithTimeout(context.Background(), <span class="hljs-number">2</span>*time.Second)<br>	<span class="hljs-keyword">defer</span> cancel() <span class="hljs-comment">// 带超时context的固定写法</span><br>	msg := <span class="hljs-string">&quot;Hello World!&quot;</span><br>	ch.PublishWithContext(<br>		ctx,<br>		<span class="hljs-string">&quot;&quot;</span>,      <span class="hljs-comment">// exchange</span><br>		<span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-comment">// exchange为空时，key为队列名称</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// mandatory</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// immediate</span><br>		amqp.Publishing&#123; <span class="hljs-comment">// 消息内容</span><br>			ContentType: <span class="hljs-string">&quot;text/plain&quot;</span>, <span class="hljs-comment">// MIME content type</span><br>			Body:        []<span class="hljs-type">byte</span>(msg),<br>		&#125;,<br>	)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"context"</span>
+	<span class="token string">"log"</span>
+	<span class="token string">"time"</span>
+
+	amqp <span class="token string">"github.com/rabbitmq/amqp091-go"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token comment">// 连接到RabbitMQ服务器（broker）</span>
+	conn<span class="token punctuation">,</span> err <span class="token operator">:=</span> amqp<span class="token punctuation">.</span><span class="token function">Dial</span><span class="token punctuation">(</span><span class="token string">"amqp://guest:guest@localhost:5672/"</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"connection.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">defer</span> conn<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token comment">// 创建channel（amqp.Channel）</span>
+	ch<span class="token punctuation">,</span> err <span class="token operator">:=</span> conn<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"channel.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">defer</span> ch<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+	<span class="token comment">// 声明一个队列</span>
+	ch<span class="token punctuation">.</span><span class="token function">QueueDeclare</span><span class="token punctuation">(</span>
+		<span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token comment">// 队列名称，若该队列不存在则创建</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// durable</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// delete when unused</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// exclusive</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// no-wait</span>
+		<span class="token boolean">nil</span><span class="token punctuation">,</span>     <span class="token comment">// arguments</span>
+	<span class="token punctuation">)</span>
+
+	<span class="token comment">// 发送消息到队列，超时时间设为2秒</span>
+	ctx<span class="token punctuation">,</span> cancel <span class="token operator">:=</span> context<span class="token punctuation">.</span><span class="token function">WithTimeout</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">Background</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token operator">*</span>time<span class="token punctuation">.</span>Second<span class="token punctuation">)</span>
+	<span class="token keyword">defer</span> <span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 带超时context的固定写法</span>
+	msg <span class="token operator">:=</span> <span class="token string">"Hello World!"</span>
+	ch<span class="token punctuation">.</span><span class="token function">PublishWithContext</span><span class="token punctuation">(</span>
+		ctx<span class="token punctuation">,</span>
+		<span class="token string">""</span><span class="token punctuation">,</span>      <span class="token comment">// exchange</span>
+		<span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token comment">// exchange为空时，key为队列名称</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// mandatory</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// immediate</span>
+		amqp<span class="token punctuation">.</span>Publishing<span class="token punctuation">&#123;</span> <span class="token comment">// 消息内容</span>
+			ContentType<span class="token punctuation">:</span> <span class="token string">"text/plain"</span><span class="token punctuation">,</span> <span class="token comment">// MIME content type</span>
+			Body<span class="token punctuation">:</span>        <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">,</span>
+		<span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+	<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p><code>receive.go</code></p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br><br>	amqp <span class="hljs-string">&quot;github.com/rabbitmq/amqp091-go&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// 连接到RabbitMQ服务器（broker）</span><br>	conn, err := amqp.Dial(<span class="hljs-string">&quot;amqp://guest:guest@localhost:5672/&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;connection.open: %s&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> conn.Close()<br>	<span class="hljs-comment">// 创建channel（amqp.Channel）</span><br>	ch, err := conn.Channel()<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;channel.open: %s&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> ch.Close()<br><br>	<span class="hljs-comment">// 声明一个队列，这里不需要声明队列，因为send.go已经声明过了</span><br>	<span class="hljs-comment">// 如果声明队列参数不一致，会报错</span><br>	<span class="hljs-comment">// ch.QueueDeclare(</span><br>	<span class="hljs-comment">// 	&quot;hello&quot;, // 队列名称，若该队列不存在则创建</span><br>	<span class="hljs-comment">// 	false,   // durable</span><br>	<span class="hljs-comment">// 	false,   // delete when unused</span><br>	<span class="hljs-comment">// 	false,   // exclusive</span><br>	<span class="hljs-comment">// 	false,   // no-wait</span><br>	<span class="hljs-comment">// 	nil,     // arguments</span><br>	<span class="hljs-comment">// )</span><br><br>	<span class="hljs-comment">// 接收消息，返回go语言原生channel（只读）</span><br>	deliverieCh, err := ch.Consume(<br>		<span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-comment">// queue</span><br>		<span class="hljs-string">&quot;&quot;</span>,      <span class="hljs-comment">// consumer</span><br>		<span class="hljs-literal">true</span>,    <span class="hljs-comment">// auto-ack</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// exclusive</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// no-local</span><br>		<span class="hljs-literal">false</span>,   <span class="hljs-comment">// no-wait</span><br>		<span class="hljs-literal">nil</span>,     <span class="hljs-comment">// args</span><br>	)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;basic.consume: %s&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-comment">// 从deliverieCh中读取消息</span><br>	<span class="hljs-keyword">for</span> delivery := <span class="hljs-keyword">range</span> deliverieCh &#123;<br>		log.Printf(<span class="hljs-string">&quot;Received a message: %s&quot;</span>, delivery.Body)<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"log"</span>
+
+	amqp <span class="token string">"github.com/rabbitmq/amqp091-go"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token comment">// 连接到RabbitMQ服务器（broker）</span>
+	conn<span class="token punctuation">,</span> err <span class="token operator">:=</span> amqp<span class="token punctuation">.</span><span class="token function">Dial</span><span class="token punctuation">(</span><span class="token string">"amqp://guest:guest@localhost:5672/"</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"connection.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">defer</span> conn<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token comment">// 创建channel（amqp.Channel）</span>
+	ch<span class="token punctuation">,</span> err <span class="token operator">:=</span> conn<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"channel.open: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">defer</span> ch<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+	<span class="token comment">// 声明一个队列，这里不需要声明队列，因为send.go已经声明过了</span>
+	<span class="token comment">// 如果声明队列参数不一致，会报错</span>
+	<span class="token comment">// ch.QueueDeclare(</span>
+	<span class="token comment">// 	"hello", // 队列名称，若该队列不存在则创建</span>
+	<span class="token comment">// 	false,   // durable</span>
+	<span class="token comment">// 	false,   // delete when unused</span>
+	<span class="token comment">// 	false,   // exclusive</span>
+	<span class="token comment">// 	false,   // no-wait</span>
+	<span class="token comment">// 	nil,     // arguments</span>
+	<span class="token comment">// )</span>
+
+	<span class="token comment">// 接收消息，返回go语言原生channel（只读）</span>
+	deliverieCh<span class="token punctuation">,</span> err <span class="token operator">:=</span> ch<span class="token punctuation">.</span><span class="token function">Consume</span><span class="token punctuation">(</span>
+		<span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token comment">// queue</span>
+		<span class="token string">""</span><span class="token punctuation">,</span>      <span class="token comment">// consumer</span>
+		<span class="token boolean">true</span><span class="token punctuation">,</span>    <span class="token comment">// auto-ack</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// exclusive</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// no-local</span>
+		<span class="token boolean">false</span><span class="token punctuation">,</span>   <span class="token comment">// no-wait</span>
+		<span class="token boolean">nil</span><span class="token punctuation">,</span>     <span class="token comment">// args</span>
+	<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		log<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span><span class="token string">"basic.consume: %s"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+
+	<span class="token comment">// 从deliverieCh中读取消息</span>
+	<span class="token keyword">for</span> delivery <span class="token operator">:=</span> <span class="token keyword">range</span> deliverieCh <span class="token punctuation">&#123;</span>
+		log<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"Received a message: %s"</span><span class="token punctuation">,</span> delivery<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p>运行<code>send.go</code>后可以在管理页面看到创建了一个队列。<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151614453.png" srcset="/img/loading.gif" lazyload></p>
 <p>运行<code>receive.go</code>后可以看到打印出接收到的消息。程序并没有结束运行，因为<code>deliverieCh</code>并没有关闭，所以consumer进程会一直阻塞等待下一条消息的到来。</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">2024</span>/<span class="hljs-number">07</span>/<span class="hljs-number">24</span> <span class="hljs-number">15</span>:<span class="hljs-number">16</span>:<span class="hljs-number">48</span> Received a message: Hello World!<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">2024&#x2F;07&#x2F;24 15:16:48 Received a message: Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <p>回到管理页面可以看到该消息队列多了一个consumer<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151916476.png" srcset="/img/loading.gif" lazyload></p>
 <p>按下<kbd>Ctrl</kbd>+<kbd>C</kbd>结束consumer进程，可以看到该队列下的consumer没有了（就不截图了）。</p>
@@ -629,6 +733,8 @@
   });
 </script>
 
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
 
   <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
