@@ -18,13 +18,13 @@
   
     <meta name="description" content="供复习使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Go设计模式】0.面向对象设计原则">
-<meta property="og:url" content="https://sheep-in-box.github.io/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/index.html">
+<meta property="og:title" content="【Go设计模式】2.创建型-简单工厂模式">
+<meta property="og:url" content="https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%912-%E5%88%9B%E5%BB%BA%E5%9E%8B-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="盒子里的羊的博客">
 <meta property="og:description" content="供复习使用">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-07-16T09:27:54.000Z">
-<meta property="article:modified_time" content="2024-07-17T01:51:56.916Z">
+<meta property="article:published_time" content="2024-07-25T06:34:57.000Z">
+<meta property="article:modified_time" content="2024-07-25T06:34:47.875Z">
 <meta property="article:author" content="Sheep">
 <meta property="article:tag" content="Go语言">
 <meta property="article:tag" content="设计模式">
@@ -32,7 +32,7 @@
   
   
   
-  <title>【Go设计模式】0.面向对象设计原则 - 盒子里的羊的博客</title>
+  <title>【Go设计模式】2.创建型-简单工厂模式 - 盒子里的羊的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【Go设计模式】0.面向对象设计原则"></span>
+            <span id="subtitle" data-typed-text="【Go设计模式】2.创建型-简单工厂模式"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-16 17:27" pubdate>
-          2024年7月16日 下午
+        <time datetime="2024-07-25 14:34" pubdate>
+          2024年7月25日 下午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          669 字
+          124 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          6 分钟
+          2 分钟
         
       </span>
     
@@ -271,77 +271,41 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【Go设计模式】0.面向对象设计原则</h1>
+            <h1 id="seo-header">【Go设计模式】2.创建型-简单工厂模式</h1>
             
             
               <div class="markdown-body">
                 
-                <p>供复习使用</p>
-<h1 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h1><h2 id="S-O-L-I-D"><a href="#S-O-L-I-D" class="headerlink" title="S.O.L.I.D"></a>S.O.L.I.D</h2><table>
-<thead>
-<tr>
-<th>简称</th>
-<th>全称</th>
-<th>中文</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>SRP</td>
-<td>Single Responsibility Principle</td>
-<td>单一职责原则</td>
-</tr>
-<tr>
-<td>OCP</td>
-<td>Open-Closed Principle</td>
-<td>开放封闭原则</td>
-</tr>
-<tr>
-<td>LSP</td>
-<td>Liskov Substitution Principle</td>
-<td>里氏替换原则</td>
-</tr>
-<tr>
-<td>ISP</td>
-<td>Interface Segregation Principle</td>
-<td>接口隔离原则</td>
-</tr>
-<tr>
-<td>DIP</td>
-<td>Dependency Inversion Principle</td>
-<td>依赖倒置原则</td>
-</tr>
-</tbody></table>
-<h3 id="1-单一职责原则"><a href="#1-单一职责原则" class="headerlink" title="1. 单一职责原则"></a>1. 单一职责原则</h3><blockquote>
-<p>一个类应该只有一个引起它变化的原因。</p>
-</blockquote>
-<p>让一个类只负责一件事，当这个类需要做的事情过多的时候，就应该拆解这个类。<br>如果一个类承担的职责过多，相当于这些职责之间形成了紧耦合，一个职责的变化可能会削弱这个类完成其它职责的能力。</p>
-<h3 id="2-开放封闭原则"><a href="#2-开放封闭原则" class="headerlink" title="2. 开放封闭原则"></a>2. 开放封闭原则</h3><blockquote>
-<p>类应该对扩展开放，对修改关闭。</p>
-</blockquote>
-<p>扩展就是添加新功能的意思，因此该原则要求在添加新功能时不需要修改原本的代码。</p>
-<p>符合开闭原则最典型的设计模式是装饰者模式，它可以动态地将责任附加到对象上，而不用去修改类的代码。</p>
-<h3 id="3-里氏替换原则"><a href="#3-里氏替换原则" class="headerlink" title="3. 里氏替换原则"></a>3. 里氏替换原则</h3><blockquote>
-<p>子类对象必须能够替换掉所有父类对象。</p>
-</blockquote>
-<p>继承是一种 “is a” 关系，子类需要能够当成父类来使用，并且需要比父类更特殊。</p>
-<p>如果不满足这个原则，那么各个子类的行为上就会有很大差异，增加继承体系的复杂度。</p>
-<h3 id="4-接口隔离原则"><a href="#4-接口隔离原则" class="headerlink" title="4. 接口隔离原则"></a>4. 接口隔离原则</h3><blockquote>
-<p>不应该强迫客户依赖于它们不使用的方法。</p>
-</blockquote>
-<p>因此使用多个专门的接口比使用单一的总接口要好。</p>
-<h3 id="5-依赖倒置原则"><a href="#5-依赖倒置原则" class="headerlink" title="5. 依赖倒置原则"></a>5. 依赖倒置原则</h3><blockquote>
-<p>高层模块不应依赖于低层模块，两者都应该依赖于抽象。<br>抽象不应该依赖于细节，细节应该依赖于抽象。</p>
-</blockquote>
-<p>高层模块包含一个应用程序中重要的策略选择和业务模块，如果高层模块依赖于低层模块，那么低层模块的改动就会直接影响到高层模块，从而迫使高层模块也需要改动。</p>
-<p>依赖于抽象意味着：</p>
-<ul>
-<li>任何变量都不应该持有一个指向具体类的指针或者引用；</li>
-<li>任何类都不应该从具体类派生；</li>
-<li>任何方法都不应该覆写它的任何基类中的已经实现的方法。</li>
-</ul>
-<h2 id="其他常见原则"><a href="#其他常见原则" class="headerlink" title="其他常见原则"></a>其他常见原则</h2><h3 id="1-迪米特法则"><a href="#1-迪米特法则" class="headerlink" title="1.迪米特法则"></a>1.迪米特法则</h3><p>迪米特法则又叫作最少知识原则（Least Knowledge Principle），就是说一个对象应当对其他对象有尽可能少的了解。</p>
-<h3 id="2-合成复用原则"><a href="#2-合成复用原则" class="headerlink" title="2. 合成复用原则"></a>2. 合成复用原则</h3><p>尽量使用对象的组合&#x2F;聚合来实现代码复用，而不是通过继承。</p>
+                <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>简单工厂并不属于GoF的23种设计模式，它是开发者认为的一种非常简易的设计模式。</p>
+<h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="287.5px" preserveAspectRatio="none" style="width:658px;height:287px;" version="1.1" viewBox="0 0 658 287" width="658.3333px" zoomAndPan="magnify"><defs><linearGradient id="g19w2qd6matbki0" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#999890"/><stop offset="100%" stop-color="#8E8C84"/></linearGradient></defs><g><rect fill="url(#g19w2qd6matbki0)" height="47.168" id="_title" rx="4.1667" ry="4.1667" style="stroke:#807E77;stroke-width:1.0416666666666667;" width="294.7062" x="177.1614" y="20.8333"/><text fill="#325D88" font-family="Verdana" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="271.7896" x="188.6197" y="51.6296">Simple Factory Pattern</text><!--class Product--><g id="elem_Product"><rect codeLine="4" fill="#325D88" height="50.8382" id="Product" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="98.6263"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="98.6263"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="128.6312"/><rect codeLine="4" fill="none" height="50.8382" id="Product" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="98.6263"/><ellipse cx="454.3646" cy="115.7121" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M451.2559,112.88 L451.2559,111.285 L456.6758,111.285 L456.6758,112.88 L454.8691,112.88 L454.8691,118.8045 L456.6758,118.8045 L456.6758,120.3996 L451.2559,120.3996 L451.2559,118.8045 L453.0625,118.8045 L453.0625,112.88 L451.2559,112.88 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" font-style="italic" lengthAdjust="spacing" textLength="43.959" x="473.1146" y="119.6789">Product</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="440.8229" x2="524.3653" y1="132.7979" y2="132.7979"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="440.8229" x2="524.3653" y1="141.1312" y2="141.1312"/></g><!--class ConcreteProductA--><g id="elem_ConcreteProductA"><rect codeLine="7" fill="#325D88" height="50.8382" id="ConcreteProductA" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="224.8867"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="224.8867"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="254.8916"/><rect codeLine="7" fill="none" height="50.8382" id="ConcreteProductA" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="224.8867"/><ellipse cx="332.8438" cy="241.9725" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M334.748,246.3996 Q334.3249,246.6112 333.8529,246.7251 Q333.3809,246.839 332.8763,246.839 Q331.0208,246.839 330.0443,245.6346 Q329.084,244.4139 329.084,242.119 Q329.084,239.8078 330.0443,238.6034 Q331.0208,237.3826 332.8763,237.3826 Q333.3809,237.3826 333.8529,237.4966 Q334.3411,237.5942 334.748,237.8221 L334.748,239.8241 Q334.2923,239.4009 333.8529,239.2056 Q333.4134,238.994 332.9577,238.994 Q331.9648,238.994 331.4603,239.7915 Q330.9557,240.5728 330.9557,242.119 Q330.9557,243.6489 331.4603,244.4302 Q331.9648,245.2114 332.9577,245.2114 Q333.4134,245.2114 333.8529,245.0161 Q334.2923,244.8208 334.748,244.3976 L334.748,246.3996 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="103.6733" x="351.5938" y="245.9393">ConcreteProductA</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="319.3021" x2="462.5587" y1="259.0583" y2="259.0583"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="319.3021" x2="462.5587" y1="267.3916" y2="267.3916"/></g><!--class ConcreteProductB--><g id="elem_ConcreteProductB"><rect codeLine="10" fill="#325D88" height="50.8382" id="ConcreteProductB" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="224.8867"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="224.8867"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="254.8916"/><rect codeLine="10" fill="none" height="50.8382" id="ConcreteProductB" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="224.8867"/><ellipse cx="515.125" cy="241.9725" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M517.0293,246.3996 Q516.6061,246.6112 516.1341,246.7251 Q515.6621,246.839 515.1576,246.839 Q513.3021,246.839 512.3255,245.6346 Q511.3652,244.4139 511.3652,242.119 Q511.3652,239.8078 512.3255,238.6034 Q513.3021,237.3826 515.1576,237.3826 Q515.6621,237.3826 516.1341,237.4966 Q516.6224,237.5942 517.0293,237.8221 L517.0293,239.8241 Q516.5736,239.4009 516.1341,239.2056 Q515.6947,238.994 515.2389,238.994 Q514.2461,238.994 513.7415,239.7915 Q513.237,240.5728 513.237,242.119 Q513.237,243.6489 513.7415,244.4302 Q514.2461,245.2114 515.2389,245.2114 Q515.6947,245.2114 516.1341,245.0161 Q516.5736,244.8208 517.0293,244.3976 L517.0293,246.3996 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="103.6957" x="533.875" y="245.9393">ConcreteProductB</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="501.5833" x2="644.8623" y1="259.0583" y2="259.0583"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="501.5833" x2="644.8623" y1="267.3916" y2="267.3916"/></g><!--class Factory--><g id="elem_Factory"><rect codeLine="13" fill="#325D88" height="74.5931" id="Factory" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="86.7513"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="86.7513"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="116.7562"/><rect codeLine="13" fill="none" height="74.5931" id="Factory" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="86.7513"/><ellipse cx="110.0998" cy="103.8371" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M112.0041,108.2642 Q111.5809,108.4757 111.1089,108.5897 Q110.6369,108.7036 110.1323,108.7036 Q108.2769,108.7036 107.3003,107.4992 Q106.34,106.2785 106.34,103.9836 Q106.34,101.6724 107.3003,100.4679 Q108.2769,99.2472 110.1323,99.2472 Q110.6369,99.2472 111.1089,99.3612 Q111.5972,99.4588 112.0041,99.6867 L112.0041,101.6886 Q111.5484,101.2655 111.1089,101.0701 Q110.6695,100.8586 110.2137,100.8586 Q109.2209,100.8586 108.7163,101.6561 Q108.2118,102.4373 108.2118,103.9836 Q108.2118,105.5135 108.7163,106.2948 Q109.2209,107.076 110.2137,107.076 Q110.6695,107.076 111.1089,106.8807 Q111.5484,106.6854 112.0041,106.2622 L112.0041,108.2642 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="42.9072" x="135.0998" y="107.8039">Factory</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="18.75" x2="263.1068" y1="120.9229" y2="120.9229"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="18.75" x2="263.1068" y1="129.2562" y2="129.2562"/><ellipse cx="29.1667" cy="146.8628" fill="none" rx="3.125" ry="3.125" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="209.9818" x="42.7083" y="149.2671">CreateProduct(type: String): Product</text></g><!--reverse link Product to ConcreteProductA--><g id="link_Product_ConcreteProductA"><path d="M453.128,165.0055 C437.1489,186.6617 425.2083,202.8242 409.2292,224.4701 " fill="none" id="Product-backto-ConcreteProductA" style="stroke:#325D88;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="464.2604,149.918,448.0989,161.2947,458.1572,168.7163,464.2604,149.918" style="stroke:#325D88;stroke-width:3.125;"/></g><!--reverse link Product to ConcreteProductB--><g id="link_Product_ConcreteProductB"><path d="M511.7708,165.0644 C527.5729,186.7207 539.3333,202.8242 555.125,224.4701 " fill="none" id="Product-backto-ConcreteProductB" style="stroke:#325D88;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="500.7188,149.918,506.722,168.7484,516.8196,161.3804,500.7188,149.918" style="stroke:#325D88;stroke-width:3.125;"/></g><!--link Factory to Product--><g id="link_Factory_Product"><path codeLine="17" d="M264.2813,124.043 C325.4479,124.043 389.1875,124.043 433.0729,124.043 " fill="none" id="Factory-to-Product" style="stroke:#325D88;stroke-width:3.125;"/><polygon fill="#325D88" points="439.3229,124.043,429.9479,119.8763,434.1146,124.043,429.9479,128.2096,439.3229,124.043" style="stroke:#325D88;stroke-width:3.125;"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacing" textLength="127.4414" x="288.4271" y="112.7291">CreateProduct(type)</text></g><!--SRC=[ZSun2i9040NGVaunTWRn0Ya43LW7Se9XC-f2TZRiVeiGlBjHt5I2Lh-O_pwpmKs3SXRhCw8fmMDGxdmObpYBGqmJjm9eCY9lIrx4ARSfzdS7dkb1v0R9cPjeBYdqSphoUoIe8VzHF_sebrzcOjvnarHMkiKqQiqTahThLHVziaNj3-jc_GLNJm00]--></g></svg>
 
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Product interface &#123;
+
+&#125;</code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type ConcreteProductA struct &#123;
+	Product &#x2F;&#x2F;便于理解
+&#125;</code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type ConcreteProductB struct &#123;
+	Product &#x2F;&#x2F;便于理解
+&#125;</code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Factory struct &#123;
+
+&#125;
+func (fac *Factory) CreateProduct(type string) Product &#123;
+	var product Product
+	switch type &#123;
+		case &quot;ConcreteProductA&quot;: product &#x3D; new(ConcreteProductA)
+		case &quot;ConcreteProductB&quot;: product &#x3D; new(ConcreteProductB)
+	&#125;
+	return product
+&#125;</code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">func main() &#123;
+	factory :&#x3D; new(Factory)
+	concreteProductA :&#x3D; factory.CreateProduct(&quot;ConcreteProductA&quot;)
+	concreteProductA.dosth()
+	concreteProductB :&#x3D; factory.CreateProduct(&quot;ConcreteProductB&quot;)
+	concreteProductB.dosth()
+&#125;</code></pre></div></figure>
                 
               </div>
             
@@ -388,8 +352,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【Go设计模式】0.面向对象设计原则</div>
-      <div>https://sheep-in-box.github.io/2024/07/16/【Go设计模式】0-面向对象设计原则/</div>
+      <div>【Go设计模式】2.创建型-简单工厂模式</div>
+      <div>https://sheep-in-box.github.io/2024/07/25/【Go设计模式】2-创建型-简单工厂模式/</div>
     </div>
     <div class="license-meta">
       
@@ -401,7 +365,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月16日</div>
+          <div>2024年7月25日</div>
         </div>
       
       
@@ -433,18 +397,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/" title="【RabbitMQ】Go实现">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【RabbitMQ】Go实现</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/16/test/" title="test">
-                        <span class="hidden-mobile">test</span>
+                      <a href="/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%911-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E8%A7%88/" title="【Go设计模式】1.设计模式总览">
+                        <span class="hidden-mobile">【Go设计模式】1.设计模式总览</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
