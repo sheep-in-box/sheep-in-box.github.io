@@ -16,29 +16,24 @@
   <meta name="author" content="Sheep">
   <meta name="keywords" content="">
   
-    <meta name="description" content="RabbitMQ是一个消息代理，底层为队列，支持AMQP（高级消息队列协议）。">
+    <meta name="description" content="什么是垃圾回收（GC）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【RabbitMQ】Go实现">
-<meta property="og:url" content="https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:title" content="【Go垃圾回收机制】0.垃圾回收概述">
+<meta property="og:url" content="https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E3%80%910-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/index.html">
 <meta property="og:site_name" content="盒子里的羊的博客">
-<meta property="og:description" content="RabbitMQ是一个消息代理，底层为队列，支持AMQP（高级消息队列协议）。">
+<meta property="og:description" content="什么是垃圾回收（GC）">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724144435282.png">
-<meta property="og:image" content="https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151614453.png">
-<meta property="og:image" content="https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151916476.png">
-<meta property="article:published_time" content="2024-07-24T07:56:30.000Z">
-<meta property="article:modified_time" content="2024-07-24T07:57:13.029Z">
+<meta property="article:published_time" content="2024-07-25T02:57:49.000Z">
+<meta property="article:modified_time" content="2024-07-25T02:57:49.387Z">
 <meta property="article:author" content="Sheep">
 <meta property="article:tag" content="Go语言">
-<meta property="article:tag" content="中间件">
-<meta property="article:tag" content="消息队列">
-<meta property="article:tag" content="RabbitMQ">
+<meta property="article:tag" content="垃圾回收">
+<meta property="article:tag" content="GC">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724144435282.png">
   
   
   
-  <title>【RabbitMQ】Go实现 - 盒子里的羊的博客</title>
+  <title>【Go垃圾回收机制】0.垃圾回收概述 - 盒子里的羊的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -91,7 +86,10 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
 
 
 <body>
@@ -206,7 +204,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【RabbitMQ】Go实现"></span>
+            <span id="subtitle" data-typed-text="【Go垃圾回收机制】0.垃圾回收概述"></span>
           
         </div>
 
@@ -217,8 +215,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-24 15:56" pubdate>
-          2024年7月24日 下午
+        <time datetime="2024-07-25 10:57" pubdate>
+          2024年7月25日 上午
         </time>
       </span>
     
@@ -229,7 +227,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          980 字
+          567 字
         
       </span>
     
@@ -240,7 +238,7 @@
         
         
         
-          9 分钟
+          5 分钟
         
       </span>
     
@@ -277,141 +275,25 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【RabbitMQ】Go实现</h1>
+            <h1 id="seo-header">【Go垃圾回收机制】0.垃圾回收概述</h1>
             
             
               <div class="markdown-body">
                 
-                <p>RabbitMQ是一个消息代理，底层为队列，支持AMQP（高级消息队列协议）。</p>
-<h2 id="消息队列的作用"><a href="#消息队列的作用" class="headerlink" title="消息队列的作用"></a>消息队列的作用</h2><ul>
-<li><strong>应用解耦</strong>：生产者和消费者之间通过消息传递进行通信，而非直接调用。</li>
-<li><strong>异步通信</strong>：消息的发送方可以在不等待响应的情况下继续执行，消息会被存储在队列中等待接收者处理，提高了系统的吞吐量。</li>
-<li><strong>削峰填谷</strong>：在遇到瞬时的高流量情况下，消息队列作为缓冲区，防止数据过载。</li>
+                <p>之前一直就记了点GMP架构，golang的gc机制一直没去了解，现在看了发现其实相当好理解，go确实是一门直截了当的语言。</p>
+<h2 id="什么是垃圾回收"><a href="#什么是垃圾回收" class="headerlink" title="什么是垃圾回收"></a>什么是垃圾回收</h2><p>Garbage Collection，简称GC，也就是垃圾回收，是一种自动内存管理的机制。当程序向操作系统申请的内存不再需要时，垃圾回收主动将其回收并供其他代码进行内存申请时候复用，或者将其归还给操作系统，这种针对内存级别资源的自动回收过程，即为垃圾回收。而负责垃圾回收的程序组件，即为垃圾回收器。</p>
+<h2 id="垃圾回收的几个概念"><a href="#垃圾回收的几个概念" class="headerlink" title="垃圾回收的几个概念"></a>垃圾回收的几个概念</h2><h3 id="1-根对象"><a href="#1-根对象" class="headerlink" title="1. 根对象"></a>1. 根对象</h3><p>根对象在垃圾回收的术语中又叫做根集合，它是垃圾回收器在标记过程时最先检查的对象，包括：</p>
+<ul>
+<li><strong>全局变量</strong>：程序在编译期就能确定的那些存在于程序整个生命周期的变量。</li>
+<li><strong>执行栈</strong>：每个 goroutine 都包含自己的执行栈，这些执行栈上包含栈上的变量及指向分配的堆内存区块的指针。</li>
+<li><strong>寄存器</strong>：寄存器的值可能表示一个指针，参与计算的这些指针可能指向某些赋值器分配的堆内存区块。</li>
 </ul>
-<h2 id="消息队列的缺点"><a href="#消息队列的缺点" class="headerlink" title="消息队列的缺点"></a>消息队列的缺点</h2><ul>
-<li><strong>降低系统的可用性</strong>：系统引入外部依赖越多，越容易挂掉。</li>
-<li><strong>系统复杂度提高</strong>：需要面对各种问题，比如保证消息没有被重复消费、处理信息丢失的情况、保证消息传递的顺序性。</li>
-<li><strong>一致性问题</strong>：多个系统处理消息可能成功可能不成功，造成数据不一致。</li>
-</ul>
-<h2 id="Go使用RabbitMQ"><a href="#Go使用RabbitMQ" class="headerlink" title="Go使用RabbitMQ"></a>Go使用RabbitMQ</h2><p>首先，安装rabbitmq</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">choco install rabbitmq</code></pre></div></figure>
+<h3 id="2-STW"><a href="#2-STW" class="headerlink" title="2. STW"></a>2. STW</h3><p>STW 可以是 Stop the World 的缩写，也可以是 Start the World 的缩写。通常意义上指指代从 Stop the World 这一动作发生时到 Start the World 这一动作发生时这一段时间间隔，即<del>砸瓦鲁多</del>万物静止。STW 在垃圾回收过程中为了保证实现的正确性、防止无止境的内存增长等问题而不可避免的需要停止赋值器进一步操作对象图的一段过程。在STW过程中整个用户代码被停止或者放缓执行， STW 越长，对用户代码造成的影响（例如延迟）就越大，所以垃圾回收算法的核心就是减少STW时间，减轻GC对程序的影响。</p>
+<p>其他具体的内容详见 <a target="_blank" rel="noopener" href="https://learnku.com/docs/go-interviews/9-la-ji-hui-shou-qi/16576">https://learnku.com/docs/go-interviews/9-la-ji-hui-shou-qi/16576</a><br>直接从go语言的GC机制开始写了，这章就不写那么多了。</p>
 
-<p>安装后，会自动启动服务，默认运行在本地<code>5672</code>端口，管理界面为<code>localhost:15672</code>，默认用户和密码均为guest<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724144435282.png" srcset="/img/loading.gif" lazyload><br>接下来用go编写两段程序<code>send.go</code>和<code>receive.go</code>模拟消息发送方和接收方。</p>
-<p><code>send.go</code>:</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
-
-import (
-	&quot;context&quot;
-	&quot;log&quot;
-	&quot;time&quot;
-
-	amqp &quot;github.com&#x2F;rabbitmq&#x2F;amqp091-go&quot;
-)
-
-func main() &#123;
-	&#x2F;&#x2F; 连接到RabbitMQ服务器（broker）
-	conn, err :&#x3D; amqp.Dial(&quot;amqp:&#x2F;&#x2F;guest:guest@localhost:5672&#x2F;&quot;)
-	if err !&#x3D; nil &#123;
-		log.Fatalf(&quot;connection.open: %s&quot;, err)
-	&#125;
-	defer conn.Close()
-	&#x2F;&#x2F; 创建channel（amqp.Channel）
-	ch, err :&#x3D; conn.Channel()
-	if err !&#x3D; nil &#123;
-		log.Fatalf(&quot;channel.open: %s&quot;, err)
-	&#125;
-	defer ch.Close()
-
-	&#x2F;&#x2F; 声明一个队列
-	ch.QueueDeclare(
-		&quot;hello&quot;, &#x2F;&#x2F; 队列名称，若该队列不存在则创建
-		false,   &#x2F;&#x2F; durable
-		false,   &#x2F;&#x2F; delete when unused
-		false,   &#x2F;&#x2F; exclusive
-		false,   &#x2F;&#x2F; no-wait
-		nil,     &#x2F;&#x2F; arguments
-	)
-
-	&#x2F;&#x2F; 发送消息到队列，超时时间设为2秒
-	ctx, cancel :&#x3D; context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel() &#x2F;&#x2F; 带超时context的固定写法
-	msg :&#x3D; &quot;Hello World!&quot;
-	ch.PublishWithContext(
-		ctx,
-		&quot;&quot;,      &#x2F;&#x2F; exchange
-		&quot;hello&quot;, &#x2F;&#x2F; exchange为空时，key为队列名称
-		false,   &#x2F;&#x2F; mandatory
-		false,   &#x2F;&#x2F; immediate
-		amqp.Publishing&#123; &#x2F;&#x2F; 消息内容
-			ContentType: &quot;text&#x2F;plain&quot;, &#x2F;&#x2F; MIME content type
-			Body:        []byte(msg),
-		&#125;,
-	)
-&#125;
-</code></pre></div></figure>
-
-<p><code>receive.go</code></p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
-
-import (
-	&quot;log&quot;
-
-	amqp &quot;github.com&#x2F;rabbitmq&#x2F;amqp091-go&quot;
-)
-
-func main() &#123;
-	&#x2F;&#x2F; 连接到RabbitMQ服务器（broker）
-	conn, err :&#x3D; amqp.Dial(&quot;amqp:&#x2F;&#x2F;guest:guest@localhost:5672&#x2F;&quot;)
-	if err !&#x3D; nil &#123;
-		log.Fatalf(&quot;connection.open: %s&quot;, err)
-	&#125;
-	defer conn.Close()
-	&#x2F;&#x2F; 创建channel（amqp.Channel）
-	ch, err :&#x3D; conn.Channel()
-	if err !&#x3D; nil &#123;
-		log.Fatalf(&quot;channel.open: %s&quot;, err)
-	&#125;
-	defer ch.Close()
-
-	&#x2F;&#x2F; 声明一个队列，这里不需要声明队列，因为send.go已经声明过了
-	&#x2F;&#x2F; 如果声明队列参数不一致，会报错
-	&#x2F;&#x2F; ch.QueueDeclare(
-	&#x2F;&#x2F; 	&quot;hello&quot;, &#x2F;&#x2F; 队列名称，若该队列不存在则创建
-	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; durable
-	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; delete when unused
-	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; exclusive
-	&#x2F;&#x2F; 	false,   &#x2F;&#x2F; no-wait
-	&#x2F;&#x2F; 	nil,     &#x2F;&#x2F; arguments
-	&#x2F;&#x2F; )
-
-	&#x2F;&#x2F; 接收消息，返回go语言原生channel（只读）
-	deliverieCh, err :&#x3D; ch.Consume(
-		&quot;hello&quot;, &#x2F;&#x2F; queue
-		&quot;&quot;,      &#x2F;&#x2F; consumer
-		true,    &#x2F;&#x2F; auto-ack
-		false,   &#x2F;&#x2F; exclusive
-		false,   &#x2F;&#x2F; no-local
-		false,   &#x2F;&#x2F; no-wait
-		nil,     &#x2F;&#x2F; args
-	)
-	if err !&#x3D; nil &#123;
-		log.Fatalf(&quot;basic.consume: %s&quot;, err)
-	&#125;
-
-	&#x2F;&#x2F; 从deliverieCh中读取消息
-	for delivery :&#x3D; range deliverieCh &#123;
-		log.Printf(&quot;Received a message: %s&quot;, delivery.Body)
-	&#125;
-&#125;
-</code></pre></div></figure>
-
-<p>运行<code>send.go</code>后可以在管理页面看到创建了一个队列。<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151614453.png" srcset="/img/loading.gif" lazyload></p>
-<p>运行<code>receive.go</code>后可以看到打印出接收到的消息。程序并没有结束运行，因为<code>deliverieCh</code>并没有关闭，所以consumer进程会一直阻塞等待下一条消息的到来。</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">2024&#x2F;07&#x2F;24 15:16:48 Received a message: Hello World!</code></pre></div></figure>
-
-<p>回到管理页面可以看到该消息队列多了一个consumer<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151916476.png" srcset="/img/loading.gif" lazyload></p>
-<p>按下<kbd>Ctrl</kbd>+<kbd>C</kbd>结束consumer进程，可以看到该队列下的consumer没有了（就不截图了）。</p>
-<p>此后可以测试启动<code>receive.go</code>并反复执行<code>send.go</code>（可以把声明队列注释掉），都是可以收到消息的。</p>
+    <div id="aplayer-MDbECfbh" class="aplayer aplayer-tag-marker meting-tag-marker"
+         data-id="1406633327" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
+    ></div>
 
                 
               </div>
@@ -426,11 +308,9 @@ func main() &#123;
       
         <a href="/tags/Go%E8%AF%AD%E8%A8%80/" class="print-no-link">#Go语言</a>
       
-        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="print-no-link">#中间件</a>
+        <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="print-no-link">#垃圾回收</a>
       
-        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" class="print-no-link">#消息队列</a>
-      
-        <a href="/tags/RabbitMQ/" class="print-no-link">#RabbitMQ</a>
+        <a href="/tags/GC/" class="print-no-link">#GC</a>
       
     </div>
   
@@ -442,8 +322,8 @@ func main() &#123;
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【RabbitMQ】Go实现</div>
-      <div>https://sheep-in-box.github.io/2024/07/24/【RabbitMQ】Go实现/</div>
+      <div>【Go垃圾回收机制】0.垃圾回收概述</div>
+      <div>https://sheep-in-box.github.io/2024/07/25/【Go垃圾回收机制】0-垃圾回收概述/</div>
     </div>
     <div class="license-meta">
       
@@ -455,7 +335,7 @@ func main() &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月24日</div>
+          <div>2024年7月25日</div>
         </div>
       
       
@@ -487,18 +367,12 @@ func main() &#123;
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/25/%E3%80%90Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E3%80%910-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/" title="【Go垃圾回收机制】0.垃圾回收概述">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【Go垃圾回收机制】0.垃圾回收概述</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" title="【Go设计模式】0.面向对象设计原则">
-                        <span class="hidden-mobile">【Go设计模式】0.面向对象设计原则</span>
+                      <a href="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/" title="【RabbitMQ】Go实现">
+                        <span class="hidden-mobile">【RabbitMQ】Go实现</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
