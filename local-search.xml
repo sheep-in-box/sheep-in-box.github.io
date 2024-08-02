@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>【Go Trick】接口型函数-xxxFunc</title>
-    <link href="/2024/08/01/%E3%80%90Go-Trick%E3%80%91%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/"/>
-    <url>/2024/08/01/%E3%80%90Go-Trick%E3%80%91%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/</url>
+    <title>【Go Trick】1.接口型函数-xxxFunc</title>
+    <link href="/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/"/>
+    <url>/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/</url>
     
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>参考 <a href="https://geektutu.com/post/7days-golang-q1.html">https://geektutu.com/post/7days-golang-q1.html</a></p>]]></content>
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>参考 <a href="https://geektutu.com/post/7days-golang-q1.html">https://geektutu.com/post/7days-golang-q1.html</a></p>    <div id="aplayer-nbefbfkU" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="1349929719" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
     <categories>
