@@ -16,22 +16,22 @@
   <meta name="author" content="Sheep">
   <meta name="keywords" content="">
   
-    <meta name="description" content="勾浪诡计，待更新">
+    <meta name="description" content="勾浪诡计第二集">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Go Trick】1.接口型函数-xxxFunc">
-<meta property="og:url" content="https://sheep-in-box.github.io/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/index.html">
+<meta property="og:title" content="【Go Trick】2.接口实现确认">
+<meta property="og:url" content="https://sheep-in-box.github.io/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/index.html">
 <meta property="og:site_name" content="盒子里的羊的博客">
-<meta property="og:description" content="勾浪诡计，待更新">
+<meta property="og:description" content="勾浪诡计第二集">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-08-01T09:23:51.000Z">
-<meta property="article:modified_time" content="2024-08-02T07:56:38.768Z">
+<meta property="article:published_time" content="2024-08-02T14:55:35.000Z">
+<meta property="article:modified_time" content="2024-08-02T14:58:00.334Z">
 <meta property="article:author" content="Sheep">
 <meta property="article:tag" content="Go语言">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>【Go Trick】1.接口型函数-xxxFunc - 盒子里的羊的博客</title>
+  <title>【Go Trick】2.接口实现确认 - 盒子里的羊的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【Go Trick】1.接口型函数-xxxFunc"></span>
+            <span id="subtitle" data-typed-text="【Go Trick】2.接口实现确认"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-01 17:23" pubdate>
-          2024年8月1日 下午
+        <time datetime="2024-08-02 22:55" pubdate>
+          2024年8月2日 晚上
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          10 字
+          788 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          1 分钟
+          7 分钟
         
       </span>
     
@@ -273,15 +273,50 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【Go Trick】1.接口型函数-xxxFunc</h1>
+            <h1 id="seo-header">【Go Trick】2.接口实现确认</h1>
             
             
               <div class="markdown-body">
                 
-                <p>参考 <a target="_blank" rel="noopener" href="https://geektutu.com/post/7days-golang-q1.html">https://geektutu.com/post/7days-golang-q1.html</a></p>
+                <h1 id="接口概述"><a href="#接口概述" class="headerlink" title="接口概述"></a>接口概述</h1><p>Go语言中的接口定义了一组方法的集合，接口本身不能实例化，需要具体的类型实现。<br>一个类型可以实现多个接口，如果该类型的包含了一个接口的所有同名方法，它就会自动实现这个接口。（接口即合约）</p>
+<p>首先，接口只能声明方法，不能提供方法的具体实现。一个具体的类型实现了接口的全部方法，它就可以被视作实现了这个接口，可以将地址赋值给该接口类型的变量，类似于C++的基类指针，这是Go实现多态的关键。</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Person interface &#123;
+	getName() string  &#x2F;&#x2F; 接口声明的方法
+&#125;
 
-    <div id="aplayer-nbefbfkU" class="aplayer aplayer-tag-marker meting-tag-marker"
-         data-id="1349929719" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
+
+type Student struct &#123;
+	name string
+	age  int
+&#125;
+
+&#x2F;&#x2F; Student类实现了getName()方法，因此Student实现了Person接口
+func (student *Student) getName() string &#123;
+	return student.name
+&#125;
+
+func main() &#123;
+	var person Person &#x3D; &amp;Student&#123;
+		name: &quot;Sheep&quot;,
+		age:  18,
+	&#125;
+	fmt.Println(person.getName())
+&#125;</code></pre></div></figure>
+<p>如上，可以将<code>Student</code>取地址，赋值给<code>person</code>变量，通过<code>person.getName()</code>即可调用Student的<code>getName()</code>方法。<br>如果此时将<code>Student</code>的<code>getName()</code>方法注释掉，IDE就会高亮显示错误，编译也会有响应报错</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">cannot use &amp;Student&#123;…&#125; (value of type *Student) as Person value in variable declaration: *Student does not implement Person (missing method getName)</code></pre></div></figure>
+
+<h1 id="接口实现检查"><a href="#接口实现检查" class="headerlink" title="接口实现检查"></a>接口实现检查</h1><p>由于在Go语言中接口是一种合约，并不会显式地进行检查，如Java中的<code>implements</code>关键字显式指定某个类实现某个接口，Go只会在结构体赋值给接口变量时才会进行判断。那么，如果代码中没有进行实际的多态操作，该怎么确保某个结构体实现特定的接口呢？在实际开发过程中，代码很庞杂，接口也可能有多个方法，难道只能一个个去比对方法名吗？<br>一个误区是，以为在结构体中包含匿名的接口类型成员变量就能显式指定接口的实现，如下</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Student struct &#123;
+	name string
+	age  int
+	Person
+&#125;</code></pre></div></figure>
+<p>其实并非如此，这只是Go语言匿名嵌入的特性，代表<code>Student</code>结构体有一个匿名的<code>Person</code>成员，跟接口实现没有半毛钱关系。<br>正确的思路是，在定义完结构体之后，直接进行一次没有实际意义的强制类型转换不就好了？答案是这样</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">var _ Person &#x3D; (*Student)(nil)</code></pre></div></figure>
+<p>下面来解释一下这段代码，这就是Go编程常用到的接口检查器语法。<code>var</code>代表进行一次全局变量的定义，<code>_ Person</code>意思是一个匿名的<code>Person</code>变量，等号右边则是对<code>nil</code>空值进行强制类型转换，变成指针<code>*Student</code>。这个语句能够编译成功的条件就是<code>Person</code>类型的变量能接受<code>*Student</code>类型的赋值，即<code>Student</code>实现了<code>Person</code>接口，而因为是定义了匿名变量，因此也不会对代码逻辑产生影响。<br>Go为了体现”接口即合约“的思想，让接口的实现变成隐式的，然而人们最终还是为了做显式确认，创造出了接口检查器语法，这是好是坏呢，Go语言的设计者乐见这一点吗？</p>
+
+    <div id="aplayer-DJsfIJwC" class="aplayer aplayer-tag-marker meting-tag-marker"
+         data-id="1349937455" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
     ></div>
                 
               </div>
@@ -327,8 +362,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【Go Trick】1.接口型函数-xxxFunc</div>
-      <div>https://sheep-in-box.github.io/2024/08/01/【Go-Trick】1-接口型函数-xxxFunc/</div>
+      <div>【Go Trick】2.接口实现确认</div>
+      <div>https://sheep-in-box.github.io/2024/08/02/【Go-Trick】2-接口实现确认/</div>
     </div>
     <div class="license-meta">
       
@@ -340,7 +375,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年8月1日</div>
+          <div>2024年8月2日</div>
         </div>
       
       
@@ -372,18 +407,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/" title="【Go Trick】2.接口实现确认">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【Go Trick】2.接口实现确认</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%912-%E5%88%9B%E5%BB%BA%E5%9E%8B-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="【Go设计模式】2.创建型-简单工厂模式">
-                        <span class="hidden-mobile">【Go设计模式】2.创建型-简单工厂模式</span>
+                      <a href="/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/" title="【Go Trick】1.接口型函数-xxxFunc">
+                        <span class="hidden-mobile">【Go Trick】1.接口型函数-xxxFunc</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
