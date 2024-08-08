@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Sheep.gif">
+  <link rel="icon" href="/img/Sheep.gif">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Sheep">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="真是一场酣畅淋漓的赤石啊">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【K3s踩坑记录】1.集群搭建">
+<meta property="og:url" content="https://sheep-in-box.github.io/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="盒子里的羊的博客">
+<meta property="og:description" content="真是一场酣畅淋漓的赤石啊">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-08T02:53:11.000Z">
+<meta property="article:modified_time" content="2024-08-08T02:53:39.174Z">
+<meta property="article:author" content="Sheep">
+<meta property="article:tag" content="K8s">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>【K3s踩坑记录】1.集群搭建 - 盒子里的羊的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"sheep-in-box.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Sheep-in-box</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/le-petit-prince-wallpaper-3840x2400.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【K3s踩坑记录】1.集群搭建"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-08 10:53" pubdate>
+          2024年8月8日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【K3s踩坑记录】1.集群搭建</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近在学习云原生相关的内容，比如K8s，跟着b站上的<a href="%E3%80%90Kubernetes%E5%85%A5%E9%97%A890%E5%88%86%E9%92%9F%E7%B2%BE%E8%AE%B2(%E5%90%88%E9%9B%86)%E2%80%94%E5%8F%AF%E8%83%BD%E6%98%AFB%E7%AB%99%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84K8S%E6%95%99%E7%A8%8B%E3%80%91https://www.bilibili.com/video/BV1k24y197KC?p=8&vd_source=e99b4d741025eb78b4f98ebfc1dc561f">视频教程</a>和<a target="_blank" rel="noopener" href="https://www.yuque.com/wukong-zorrm/qdoy5p">笔记</a>，使用K3s搭建集群。但是因为某种不可抗力原因等，踩了不少坑，故开一篇笔记来记录一下踩的坑。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><ul>
+<li>K3s版本：v1.30.3+k3s1</li>
+<li>集群规划</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>配置</th>
+<th>系统</th>
+<th>网络</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k8s-master</td>
+<td>192.168.6.170</td>
+<td>内存：2G</td>
+<td>CentOS</td>
+<td>互联网:NAT网络</td>
+</tr>
+<tr>
+<td>k8s-worker1</td>
+<td>192.168.6.171</td>
+<td>CPU：2核</td>
+<td>7.9.2009</td>
+<td>内部网络: Host-only</td>
+</tr>
+<tr>
+<td>k8s-worker2</td>
+<td>192.168.6.172</td>
+<td>硬盘：20G</td>
+<td>最小化安装</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><p>先配置好一台虚拟机，再进行克隆</p>
+<ul>
+<li>关闭防火墙<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">systemctl disable firewalld --now</code></pre></div></figure></li>
+<li>配置DHCP*（坑点，不然没法上网）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts
+ls
+# 可以看到以下内容
+# ifcfg-ens33  ifdown-eth ...
+# ifcfg-ens33 即为要修改的配置，具体是那个网卡可以通过
+ip addr
+# 得到
+vi ifcfg-ens33
+# 修改 BOOTPROTO&#x3D;dhcp
+# 修改 ONBOOT&#x3D;yes
+# 重启，好像也可以不重启</code></pre></div></figure></li>
+<li>配置yum镜像源*（坑点）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mv &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo.backup
+curl -o &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;Centos-7.repo</code></pre></div></figure></li>
+<li>设置selinux（需要联网）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">yum install -y container-selinux selinux-policy-base
+yum install -y https:&#x2F;&#x2F;rpm.rancher.io&#x2F;k3s&#x2F;latest&#x2F;common&#x2F;centos&#x2F;7&#x2F;noarch&#x2F;k3s-selinux-0.2-1.el7_8.noarch.rpm
+# 如果虚拟机下载不了，手动下载之后导入到虚拟机中再用yum安装</code></pre></div></figure></li>
+</ul>
+<h2 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h2><p>从github仓库获取<a target="_blank" rel="noopener" href="https://github.com/k3s-io/k3s">https://github.com/k3s-io/k3s</a><br>分别下载安装脚本<code>install.sh</code>、二进制文件<code>k3s</code>、必要的镜像包<code>k3s-airgap-images-amd64.tar.gz</code><br>直接导入到<code>~</code>目录下</p>
+<h2 id="执行安装前的准备"><a href="#执行安装前的准备" class="headerlink" title="执行安装前的准备"></a>执行安装前的准备</h2><ul>
+<li>将<code>k3s</code>二进制文件移动到<code>/usr/local/bin</code>目录，并添加执行权限<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mv k3s &#x2F;usr&#x2F;local&#x2F;bin
+chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;k3s</code></pre></div></figure></li>
+<li>将镜像移动到<code>/var/lib/rancher/k3s/agent/images/</code>目录（无需解压）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;images&#x2F;
+cp .&#x2F;k3s-airgap-images-amd64.tar.gz &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;images&#x2F;</code></pre></div></figure></li>
+<li>添加执行权限<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">chmod +x install.sh</code></pre></div></figure></li>
+</ul>
+<h2 id="克隆虚拟机"><a href="#克隆虚拟机" class="headerlink" title="克隆虚拟机"></a>克隆虚拟机</h2><ul>
+<li>将当前准备好的虚拟机（假定为master）克隆两个worker，最好打个快照</li>
+<li>克隆的两个worker节点重新生成MAC地址</li>
+<li>给所有节点重新设置hostname<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">hostnamectl set-hostname &lt;newhostname&gt;</code></pre></div></figure></li>
+</ul>
+<h1 id="K3s部署过程"><a href="#K3s部署过程" class="headerlink" title="K3s部署过程"></a>K3s部署过程</h1><h2 id="执行安装脚本"><a href="#执行安装脚本" class="headerlink" title="执行安装脚本"></a>执行安装脚本</h2><ul>
+<li>master节点执行<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 离线安装
+INSTALL_K3S_SKIP_DOWNLOAD&#x3D;true .&#x2F;install.sh
+# 安装完成后，查看节点状态
+kubectl get node
+# 查看token
+cat &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;server&#x2F;node-token
+# 复制得到的token
+# 监测节点情况
+watch -n 1 kubectl get node</code></pre></div></figure></li>
+<li>worker节点执行<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">INSTALL_K3S_SKIP_DOWNLOAD&#x3D;true \
+K3S_URL&#x3D;https:&#x2F;&#x2F;192.168.6.170:6443 \
+K3S_TOKEN&#x3D;xxx \
+.&#x2F;install.sh</code></pre></div></figure></li>
+<li>此时master节点应该可以监测到<figure><div class="code-wrapper"><pre class="line-numbers language-text" data-language="text"><code class="language-text">NAME          STATUS   ROLES                  AGE    VERSION
+k8s-master    Ready    control-plane,master   xmxs   v1.30.3+k3s1
+k8s-worker1   Ready    &lt;none&gt;                 xmxs   v1.30.3+k3s1
+k8s-worker2   Ready    &lt;none&gt;                 xmxs   v1.30.3+k3s1</code></pre></div></figure></li>
+</ul>
+<h2 id="坑点：worker节点无法使用kubectl命令"><a href="#坑点：worker节点无法使用kubectl命令" class="headerlink" title="坑点：worker节点无法使用kubectl命令"></a>坑点：worker节点无法使用<code>kubectl</code>命令</h2><ul>
+<li>跟着做到这一步发现，master节点可以使用<code>kubectl</code>，但是worker节点会报错<figure><div class="code-wrapper"><pre class="line-numbers language-text" data-language="text"><code class="language-text">W0206 03:45:01.740148    9354 loader.go:222]Config not found: &#x2F;etc&#x2F;rancher&#x2F;k3s&#x2F;k3s.yaml
+E0206 03:45:01.741036    9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refused
+E0206 03:45:01.741740 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refused
+E0206 03:45:01.743821 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refused
+E0206 03:45:01.745916 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refused
+E0206 03:45:01.747884 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refused
+The connection to the server localhost:8080 was refused - did you specify the right host or port?</code></pre></div></figure></li>
+<li>一开始网上搜索还以为是部署错误，后来才知道原来是正常的，是由于没有集群密钥。如果需要在agent节点运行<code>kubectl</code>命令，那么执行以下操作<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir ~&#x2F;.kube  
+scp 192.168.6.170:&#x2F;etc&#x2F;rancher&#x2F;k3s&#x2F;k3s.yaml ~&#x2F;.kube&#x2F;config</code></pre></div></figure></li>
+<li>然后替换config中的server ip地址<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vi ~&#x2F;.kube&#x2F;config
+# server: https:&#x2F;&#x2F;192.168.6.170:6443</code></pre></div></figure></li>
+<li>至此，就可以在worker节点运行<code>kubectl</code>命令了</li>
+</ul>
+<h2 id="配置镜像源（大坑）"><a href="#配置镜像源（大坑）" class="headerlink" title="配置镜像源（大坑）"></a>配置镜像源（大坑）</h2><p>总算把节点配置完成了，但是后面还有一大关等着，就是配置镜像源。由于不可言说的原因，如今国内想要拉取镜像必须通过镜像源，而在那个时间节点之后很多的重要镜像源都失效了。而网上找到的配置教程很多是过时的，不止是镜像源过时，配置镜像源的方法也过时了，导致一片混乱。借由这篇笔记一次性讲明白。</p>
+<ul>
+<li>查看配置文件，K3s会自动生成containerd的配置文件<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cat &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;etc&#x2F;containerd&#x2F;config.toml</code></pre></div></figure></li>
+<li>可以看都关于registry的配置<figure><div class="code-wrapper"><pre class="line-numbers language-text" data-language="text"><code class="language-text">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry]
+  config_path &#x3D; &quot;&#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;etc&#x2F;containerd&#x2F;certs.d&quot;</code></pre></div></figure></li>
+<li>这个<code>/var/lib/rancher/k3s/agent/etc/containerd/certs.d</code>就是当前containerd获取镜像源的路径。很多老教程的提供的方法是修改<code>config.toml</code>（重新启动K3s会重置），或者复制一个<code>config.toml.tmpl</code>然后在上面修改，这样的做法都是过时的，不要用！错误示范<figure><div class="code-wrapper"><pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"># 不要学！
+# 在 config.toml.tmpl 文件中添加
+[plugins.cri.registry.mirrors]
+  [plugins.cri.registry.mirrors.&quot;docker.io&quot;]
+    endpoint &#x3D; [&quot;https:&#x2F;&#x2F;docker.mirrors.ustc.edu.cn&quot;] # 镜像源也是过时的</code></pre></div></figure></li>
+<li>正确的配置方法，应该是新建<code>/etc/rancher/k3s/registries.yaml</code>，写入这个配置文件来配置镜像源（如果没有这个路径就创建）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p &#x2F;etc&#x2F;rancher&#x2F;k3s
+vi &#96;&#x2F;etc&#x2F;rancher&#x2F;k3s&#x2F;registries.yaml</code></pre></div></figure></li>
+<li>以下是<code>registries.yaml</code>参考，里面的镜像源目前可以用，但是不能保证不过时<figure><div class="code-wrapper"><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">mirrors:
+  docker.io:
+    endpoint:
+      - &quot;https:&#x2F;&#x2F;docker.m.daocloud.io&quot;
+  quay.io:
+    endpoint:
+      - &quot;https:&#x2F;&#x2F;quay.m.daocloud.io&quot;
+  registry.k8s.io:
+    endpoint:
+      - &quot;https:&#x2F;&#x2F;k8s.m.daocloud.io&quot;
+  gcr.io:
+    endpoint:
+      - &quot;https:&#x2F;&#x2F;gcr.m.daocloud.io&#x2F;&quot;
+  k8s.gcr.io:
+    endpoint:
+      - &quot;https:&#x2F;&#x2F;k8s-gcr.m.daocloud.io&quot;
+  ghcr.io:
+    endpoint:
+      - &quot;https:&#x2F;&#x2F;ghcr.m.daocloud.io&quot;</code></pre></div></figure></li>
+<li>另外，不止是master节点需要进行配置，worker节点也需要，网上搜索的结果是worker节点会从master获取镜像源，似乎也是不对的！创建pod进行镜像拉取时，默认会在pod所创建的worker节点上进行拉取，也就会使用worker节点上的镜像源配置</li>
+<li>重启每个节点<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># master
+systemctl restart k3s
+# worker
+systemctl restart k3s-agent</code></pre></div></figure></li>
+</ul>
+<h2 id="测试创建pod（坑）"><a href="#测试创建pod（坑）" class="headerlink" title="测试创建pod（坑）"></a>测试创建pod（坑）</h2><ul>
+<li>创建一个nginx的pod试试看，在master节点上执行<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">kubectl run mynginx --image&#x3D;nginx
+# 查看Pod
+kubectl get pod
+# 描述
+kubectl describe pod mynginx
+# 查看Pod的运行日志
+kubectl logs mynginx</code></pre></div></figure></li>
+<li>如果失败了，可能需要先在对应的worker节点上把镜像拉下来，再进行创建。如果失败有可能是因为创建pod的时候无限从网络拉取pod，而网络又不稳定，于是崩溃<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">crictl pull nginx</code></pre></div></figure></li>
+<li>你可能发现这样还是起不来，为什么呢？原来在于pod的拉取策略：<code>imagePullPolicy</code>。如果没有指定拉取策略，同时拉取镜像为<code>latest</code>或无标签（那也是latest），<code>imagePullPolicy</code>会自动设置为<code>Always</code>，意为永远都会从网络上pull，即使本地有<code>latest</code>的镜像（djw：这个b有点蠢嘛）。解决办法有两种，一种是创建镜像的时候指定事先下好的版本，一种是指定<code>imagePullPolicy</code>为<code>IfNotPresent</code>，也就是先判断是否在本地存在，如果有就不拉取。<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">kubectl run mynginx --image&#x3D;nginx --image-pull-policy&#x3D;IfNotPresent</code></pre></div></figure></li>
+</ul>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>这样，总算是把基本的环境部署好了，没想到这几个步骤就有如此多的坑，有不可抗力原因，有网络上的过时信息&#x2F;垃圾教程，特意去翻了K3s和containerd的文档，以及github的issues和K3s论坛，都没有非常明确的解答和教程，好在第一步终于是走出去了，真是一场酣畅淋漓的赤石啊</p>
+
+    <div id="aplayer-TtIoXgAE" class="aplayer aplayer-tag-marker meting-tag-marker"
+         data-id="411921883" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
+    ></div>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" class="category-chain-item">K3s踩坑记录</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/K8s/" class="print-no-link">#K8s</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" class="print-no-link">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【K3s踩坑记录】1.集群搭建</div>
+      <div>https://sheep-in-box.github.io/2024/08/08/【K3s踩坑记录】1-集群搭建/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Sheep</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/" title="【Go Trick】2.接口实现确认">
+                        <span class="hidden-mobile">【Go Trick】2.接口实现确认</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"sheep-in-box/sheep-in-box.github.io","repo-id":"R_kgDOMWy7LQ","category":"General","category-id":"DIC_kwDOMWy7Lc4Cg4fj","theme-light":"light","theme-dark":"noborder_gray","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN","loading":"lazy"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'noborder_gray';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/components/prism-core.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -315,7 +315,7 @@ func main() &#123;
 <figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">var _ Person &#x3D; (*Student)(nil)</code></pre></div></figure>
 <p>下面来解释一下这段代码，这就是Go编程常用到的接口检查器语法。<code>var</code>代表进行一次全局变量的定义，<code>_ Person</code>意思是一个匿名的<code>Person</code>变量，等号右边则是对<code>nil</code>空值进行强制类型转换，变成指针<code>*Student</code>。这个语句能够编译成功的条件就是<code>Person</code>类型的变量能接受<code>*Student</code>类型的赋值，即<code>Student</code>实现了<code>Person</code>接口，而因为是定义了匿名变量，因此也不会对代码逻辑产生影响。<br>Go为了体现”接口即合约“的思想，让接口的实现变成隐式的，然而人们最终还是为了做显式确认，创造出了接口检查器语法，这是好是坏呢，Go语言的设计者乐见这一点吗？</p>
 
-    <div id="aplayer-DJsfIJwC" class="aplayer aplayer-tag-marker meting-tag-marker"
+    <div id="aplayer-sLVJDrPy" class="aplayer aplayer-tag-marker meting-tag-marker"
          data-id="1349937455" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
     ></div>
                 
@@ -406,6 +406,12 @@ func main() &#123;
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="【K3s踩坑记录】1.集群搭建">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【K3s踩坑记录】1.集群搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
