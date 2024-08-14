@@ -30,8 +30,6 @@
 <meta name="twitter:card" content="summary_large_image">
   
   
-    <meta name="referrer" content="no-referrer-when-downgrade">
-  
   
   <title>【Go Trick】2.接口实现确认 - 盒子里的羊的博客</title>
 
@@ -73,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"sheep-in-box.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"sheep-in-box.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"N7bGdWK8yHK1V2v2AOALnksX-MdYXbMMI","app_key":"E8ZHCVYyzgB0A6glAaOsdxty","server_url":"https://n7bgdwk8.api.lncldglobal.com","path":"window.location.pathname","ignore_local":false,"counter":"Counter"}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -83,6 +81,35 @@
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
   
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
 
 
   
@@ -258,9 +285,9 @@
     
     
       
-        <span id="busuanzi_container_page_pv" style="display: none">
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
           <i class="iconfont icon-eye" aria-hidden="true"></i>
-          <span id="busuanzi_value_page_pv"></span> 次
+          <span id="leancloud-page-views"></span> 次
         </span>
         
       
@@ -337,7 +364,7 @@ func main() &#123;
 <figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">var _ Person &#x3D; (*Student)(nil)</code></pre></div></figure>
 <p>下面来解释一下这段代码，这就是Go编程常用到的接口检查器语法。<code>var</code>代表进行一次全局变量的定义，<code>_ Person</code>意思是一个匿名的<code>Person</code>变量，等号右边则是对<code>nil</code>空值进行强制类型转换，变成指针<code>*Student</code>。这个语句能够编译成功的条件就是<code>Person</code>类型的变量能接受<code>*Student</code>类型的赋值，即<code>Student</code>实现了<code>Person</code>接口，而因为是定义了匿名变量，因此也不会对代码逻辑产生影响。<br>Go为了体现”接口即合约“的思想，让接口的实现变成隐式的，然而人们最终还是为了做显式确认，创造出了接口检查器语法，这是好是坏呢，Go语言的设计者乐见这一点吗？</p>
 
-    <div id="aplayer-sLVJDrPy" class="aplayer aplayer-tag-marker meting-tag-marker"
+    <div id="aplayer-ZhiUmdOQ" class="aplayer aplayer-tag-marker meting-tag-marker"
          data-id="1349937455" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
     ></div>
                 
@@ -597,20 +624,21 @@ func main() &#123;
 
   
     
-      <span id="busuanzi_container_site_pv" style="display: none">
+      <span id="leancloud-site-pv-container" style="display: none">
         总访问量 
-        <span id="busuanzi_value_site_pv"></span>
+        <span id="leancloud-site-pv"></span>
          次
       </span>
     
     
-      <span id="busuanzi_container_site_uv" style="display: none">
+      <span id="leancloud-site-uv-container" style="display: none">
         总访客数 
-        <span id="busuanzi_value_site_uv"></span>
+        <span id="leancloud-site-uv"></span>
          人
       </span>
     
     
+
   
 </div>
 
@@ -765,9 +793,9 @@ func main() &#123;
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/js/local-search.js" ></script>
+  <script defer src="/js/leancloud.js" ></script>
 
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
