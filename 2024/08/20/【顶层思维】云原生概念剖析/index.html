@@ -16,23 +16,22 @@
   <meta name="author" content="Sheep">
   <meta name="keywords" content="">
   
-    <meta name="description" content="测试 图片显示">
+    <meta name="description" content="云原生，启动">
 <meta property="og:type" content="article">
-<meta property="og:title" content="test">
-<meta property="og:url" content="https://sheep-in-box.github.io/2024/07/16/test/index.html">
+<meta property="og:title" content="【顶层思维】云原生概念辨析">
+<meta property="og:url" content="https://sheep-in-box.github.io/2024/08/20/%E3%80%90%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4%E3%80%91%E4%BA%91%E5%8E%9F%E7%94%9F%E6%A6%82%E5%BF%B5%E5%89%96%E6%9E%90/index.html">
 <meta property="og:site_name" content="盒子里的羊的博客">
-<meta property="og:description" content="测试 图片显示">
+<meta property="og:description" content="云原生，启动">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://sheep-in-box.github.io/2024/07/16/test/IMG-20240716141949673.png">
-<meta property="article:published_time" content="2024-07-16T06:18:59.000Z">
-<meta property="article:modified_time" content="2024-07-18T01:39:40.447Z">
+<meta property="article:published_time" content="2024-08-20T08:54:47.000Z">
+<meta property="article:modified_time" content="2024-08-20T08:58:23.849Z">
 <meta property="article:author" content="Sheep">
+<meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://sheep-in-box.github.io/2024/07/16/test/IMG-20240716141949673.png">
   
   
   
-  <title>test - 盒子里的羊的博客</title>
+  <title>【顶层思维】云原生概念辨析 - 盒子里的羊的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -244,7 +243,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="test"></span>
+            <span id="subtitle" data-typed-text="【顶层思维】云原生概念辨析"></span>
           
         </div>
 
@@ -255,8 +254,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-16 14:18" pubdate>
-          2024年7月16日 下午
+        <time datetime="2024-08-20 16:54" pubdate>
+          2024年8月20日 下午
         </time>
       </span>
     
@@ -267,7 +266,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6 字
+          1.3k 字
         
       </span>
     
@@ -278,7 +277,7 @@
         
         
         
-          1 分钟
+          12 分钟
         
       </span>
     
@@ -323,16 +322,29 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">test</h1>
+            <h1 id="seo-header">【顶层思维】云原生概念辨析</h1>
             
             
               <div class="markdown-body">
                 
-                <p>测试</p>
-<p>图片显示<br><img src="/2024/07/16/test/IMG-20240716141949673.png" srcset="/img/loading.gif" lazyload></p>
+                <p>开一个系列用于记录一些值得学习的大技术方向&#x2F;架构&#x2F;概念等，暂且就叫【顶层思维】，“高屋建瓴”之类的太中二了。</p>
+<p>什么是云原生，硬看概念的话再久也搞不明白，不如从它的一些重要子概念开始看起，云原生和“非云原生”的区别在哪里，这样才能有更具象的理解。看了一些大佬的讲解，先记录一下自己比较粗浅的理解，估计也有很多错的。</p>
+<h1 id="微服务-vs-单体应用"><a href="#微服务-vs-单体应用" class="headerlink" title="微服务 vs 单体应用"></a>微服务 vs 单体应用</h1><p>与传统的大型单体应用相比，微服务将应用拆解为更小的、独立的组件或模块。这种拆分是纵向的，从底层的 IT 基础设施、数据库、应用中间件，到软件程序部署包，各个部分都是完全独立的，可以分别进行需求设计、开发、打包和部署。通过这种方式，微服务实现了松耦合，各微服务之间通过 RPC 等轻量级的通信接口进行交互。</p>
+<h1 id="DevOps"><a href="#DevOps" class="headerlink" title="DevOps"></a>DevOps</h1><p>DevOps 的核心理念是自动化软件交付，涵盖从需求分析、设计开发、编译构建、打包部署到测试环境与生产环境的整个软件生命周期。其中的关键实践包括：</p>
+<ol>
+<li><strong>持续集成（Continuous Integration, CI）</strong>：频繁地将代码变更集成到主分支。</li>
+<li><strong>持续交付（Continuous Delivery, CD）</strong>：确保软件可以随时部署到生产环境。</li>
+<li><strong>自动化测试</strong>：通过自动化测试流程来确保代码质量。</li>
+</ol>
+<h1 id="容器云"><a href="#容器云" class="headerlink" title="容器云"></a>容器云</h1><p>容器云包含两个核心概念：容器（如 Docker）和容器资源调度与编排（如 Kubernetes）。容器相比虚拟机是一种更轻量化的资源隔离单位，具有体积小、创建和销毁速度快的优势。容器化是一种 IaaS 层面的技术，结合容器编排技术，可以将服务提升到 PaaS 层级。</p>
+<h1 id="服务网格-vs-ESB-总线-API-网关"><a href="#服务网格-vs-ESB-总线-API-网关" class="headerlink" title="服务网格 vs ESB 总线&#x2F;API 网关"></a>服务网格 vs ESB 总线&#x2F;API 网关</h1><p>在服务治理方面，传统的 ESB 总线或 API 网关采用的是中心化架构，所有流量都通过 API 网关进行，这样可以方便地对流量进行拦截，实现日志记录、监控和限流等治理能力。而在云原生架构中，采用去中心化架构，不再有集中的流量管控点，流量的拦截能力下放到各个微服务中。常见的实践是在微服务端增加一个代理，通过代理实现对流量的拦截与管控。服务网格技术正是基于这种思路，如 Istio 框架通过在每个微服务端注入 Envoy 边车代理，实现流量的拦截与治理。需要注意的是，去中心化的微服务治理仍然有一个中心化的控制平面，用于服务的注册发现等功能，而数据平面则负责实际的流量转发和接口调用，这样即使控制平面出现故障，也不会影响微服务间的通信。</p>
+<h1 id="Serverless"><a href="#Serverless" class="headerlink" title="Serverless"></a>Serverless</h1><p>云原生架构的核心是将资源到服务不断地向上抽象。在这个过程中，你会发现逐渐脱离了底层 IT 基础设施，而只需关注各种技术服务能力。这种抽象带来了 Serverless（无服务器）架构，用户无需接触底层基础设施，实现真正的无服务器化。在 Serverless 架构中，技术服务能力被称为 BaaS（后端即服务）。在传统的 PaaS 架构下开发应用，仍然需要选择开发框架和底层平台，涉及多层架构，如数据层、逻辑层和展现层。而在 Serverless 开发流程中，你只需关注功能核心，即通过代码片段的组装实现复杂的业务逻辑，对应于 Serverless 的 FaaS（函数即服务）层。</p>
+<p>总的来说，Serverless 架构包含两层：BaaS 和 FaaS。BaaS 将后端服务（如对象存储、消息队列等）抽象成 API 接口，开发者只需编写函数代码即可完成 FaaS 层的应用程序开发。</p>
+<h1 id="不可变基础设施"><a href="#不可变基础设施" class="headerlink" title="不可变基础设施"></a>不可变基础设施</h1><p>在传统开发流程中，完成软件部署后，如果需要变更，无论是程序还是配置，通常会在原有的生产环境上进行修改或重新部署。而云原生强调，不可变基础设施理念，即一旦应用被部署到生产环境，生成的容器实例不应再做任何改动。如果需要变更，应该基于新的配置重新生成一个新的容器实例，同时销毁旧的实例。不同环境之间的迁移也应基于相同的容器镜像，而非重新编译构建。</p>
+<h1 id="声明式-API-vs-命令式-API"><a href="#声明式-API-vs-命令式-API" class="headerlink" title="声明式 API vs 命令式 API"></a>声明式 API vs 命令式 API</h1><p>在传统方式下，创建或操作一个容器通常是通过命令行工具（如 <code>kubectl</code>）进行。而声明式 API 是通过编写配置文件，在其中声明所需操作及期望的最终状态。平台接收到配置文件后，会自动解析并执行相应操作，将底层资源调整到声明的状态。使用声明式 API 有助于快速追溯操作历史，实现回退或回滚。</p>
 
-    <div id="aplayer-XtqOCPbW" class="aplayer aplayer-tag-marker meting-tag-marker"
-         data-id="1349927611" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
+    <div id="aplayer-XeAZXgiV" class="aplayer aplayer-tag-marker meting-tag-marker"
+         data-id="1459390399" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
     ></div>
                 
               </div>
@@ -341,6 +353,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4/" class="category-chain-item">顶层思维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" class="print-no-link">#云原生</a>
+      
+    </div>
   
 </div>
 
@@ -350,8 +390,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>test</div>
-      <div>https://sheep-in-box.github.io/2024/07/16/test/</div>
+      <div>【顶层思维】云原生概念辨析</div>
+      <div>https://sheep-in-box.github.io/2024/08/20/【顶层思维】云原生概念剖析/</div>
     </div>
     <div class="license-meta">
       
@@ -363,7 +403,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月16日</div>
+          <div>2024年8月20日</div>
         </div>
       
       
@@ -395,18 +435,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" title="【Go设计模式】0.面向对象设计原则">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【Go设计模式】0.面向对象设计原则</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/16/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="【K3s踩坑记录】1.集群搭建">
+                        <span class="hidden-mobile">【K3s踩坑记录】1.集群搭建</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
