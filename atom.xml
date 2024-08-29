@@ -1,258 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>盒子里的羊的博客</title>
   
   
+  <link href="https://sheep-in-box.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://sheep-in-box.github.io/"/>
+  <updated>2024-08-20T08:58:23.849Z</updated>
+  <id>https://sheep-in-box.github.io/</id>
+  
+  <author>
+    <name>Sheep</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
     <title>【顶层思维】云原生概念辨析</title>
-    <link href="/2024/08/20/%E3%80%90%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4%E3%80%91%E4%BA%91%E5%8E%9F%E7%94%9F%E6%A6%82%E5%BF%B5%E5%89%96%E6%9E%90/"/>
-    <url>/2024/08/20/%E3%80%90%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4%E3%80%91%E4%BA%91%E5%8E%9F%E7%94%9F%E6%A6%82%E5%BF%B5%E5%89%96%E6%9E%90/</url>
+    <link href="https://sheep-in-box.github.io/2024/08/20/%E3%80%90%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4%E3%80%91%E4%BA%91%E5%8E%9F%E7%94%9F%E6%A6%82%E5%BF%B5%E5%89%96%E6%9E%90/"/>
+    <id>https://sheep-in-box.github.io/2024/08/20/%E3%80%90%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4%E3%80%91%E4%BA%91%E5%8E%9F%E7%94%9F%E6%A6%82%E5%BF%B5%E5%89%96%E6%9E%90/</id>
+    <published>2024-08-20T08:54:47.000Z</published>
+    <updated>2024-08-20T08:58:23.849Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>开一个系列用于记录一些值得学习的大技术方向&#x2F;架构&#x2F;概念等，暂且就叫【顶层思维】，“高屋建瓴”之类的太中二了。</p><p>什么是云原生，硬看概念的话再久也搞不明白，不如从它的一些重要子概念开始看起，云原生和“非云原生”的区别在哪里，这样才能有更具象的理解。看了一些大佬的讲解，先记录一下自己比较粗浅的理解，估计也有很多错的。</p><h1 id="微服务-vs-单体应用"><a href="#微服务-vs-单体应用" class="headerlink" title="微服务 vs 单体应用"></a>微服务 vs 单体应用</h1><p>与传统的大型单体应用相比，微服务将应用拆解为更小的、独立的组件或模块。这种拆分是纵向的，从底层的 IT 基础设施、数据库、应用中间件，到软件程序部署包，各个部分都是完全独立的，可以分别进行需求设计、开发、打包和部署。通过这种方式，微服务实现了松耦合，各微服务之间通过 RPC 等轻量级的通信接口进行交互。</p><h1 id="DevOps"><a href="#DevOps" class="headerlink" title="DevOps"></a>DevOps</h1><p>DevOps 的核心理念是自动化软件交付，涵盖从需求分析、设计开发、编译构建、打包部署到测试环境与生产环境的整个软件生命周期。其中的关键实践包括：</p><ol><li><strong>持续集成（Continuous Integration, CI）</strong>：频繁地将代码变更集成到主分支。</li><li><strong>持续交付（Continuous Delivery, CD）</strong>：确保软件可以随时部署到生产环境。</li><li><strong>自动化测试</strong>：通过自动化测试流程来确保代码质量。</li></ol><h1 id="容器云"><a href="#容器云" class="headerlink" title="容器云"></a>容器云</h1><p>容器云包含两个核心概念：容器（如 Docker）和容器资源调度与编排（如 Kubernetes）。容器相比虚拟机是一种更轻量化的资源隔离单位，具有体积小、创建和销毁速度快的优势。容器化是一种 IaaS 层面的技术，结合容器编排技术，可以将服务提升到 PaaS 层级。</p><h1 id="服务网格-vs-ESB-总线-API-网关"><a href="#服务网格-vs-ESB-总线-API-网关" class="headerlink" title="服务网格 vs ESB 总线&#x2F;API 网关"></a>服务网格 vs ESB 总线&#x2F;API 网关</h1><p>在服务治理方面，传统的 ESB 总线或 API 网关采用的是中心化架构，所有流量都通过 API 网关进行，这样可以方便地对流量进行拦截，实现日志记录、监控和限流等治理能力。而在云原生架构中，采用去中心化架构，不再有集中的流量管控点，流量的拦截能力下放到各个微服务中。常见的实践是在微服务端增加一个代理，通过代理实现对流量的拦截与管控。服务网格技术正是基于这种思路，如 Istio 框架通过在每个微服务端注入 Envoy 边车代理，实现流量的拦截与治理。需要注意的是，去中心化的微服务治理仍然有一个中心化的控制平面，用于服务的注册发现等功能，而数据平面则负责实际的流量转发和接口调用，这样即使控制平面出现故障，也不会影响微服务间的通信。</p><h1 id="Serverless"><a href="#Serverless" class="headerlink" title="Serverless"></a>Serverless</h1><p>云原生架构的核心是将资源到服务不断地向上抽象。在这个过程中，你会发现逐渐脱离了底层 IT 基础设施，而只需关注各种技术服务能力。这种抽象带来了 Serverless（无服务器）架构，用户无需接触底层基础设施，实现真正的无服务器化。在 Serverless 架构中，技术服务能力被称为 BaaS（后端即服务）。在传统的 PaaS 架构下开发应用，仍然需要选择开发框架和底层平台，涉及多层架构，如数据层、逻辑层和展现层。而在 Serverless 开发流程中，你只需关注功能核心，即通过代码片段的组装实现复杂的业务逻辑，对应于 Serverless 的 FaaS（函数即服务）层。</p><p>总的来说，Serverless 架构包含两层：BaaS 和 FaaS。BaaS 将后端服务（如对象存储、消息队列等）抽象成 API 接口，开发者只需编写函数代码即可完成 FaaS 层的应用程序开发。</p><h1 id="不可变基础设施"><a href="#不可变基础设施" class="headerlink" title="不可变基础设施"></a>不可变基础设施</h1><p>在传统开发流程中，完成软件部署后，如果需要变更，无论是程序还是配置，通常会在原有的生产环境上进行修改或重新部署。而云原生强调，不可变基础设施理念，即一旦应用被部署到生产环境，生成的容器实例不应再做任何改动。如果需要变更，应该基于新的配置重新生成一个新的容器实例，同时销毁旧的实例。不同环境之间的迁移也应基于相同的容器镜像，而非重新编译构建。</p><h1 id="声明式-API-vs-命令式-API"><a href="#声明式-API-vs-命令式-API" class="headerlink" title="声明式 API vs 命令式 API"></a>声明式 API vs 命令式 API</h1><p>在传统方式下，创建或操作一个容器通常是通过命令行工具（如 <code>kubectl</code>）进行。而声明式 API 是通过编写配置文件，在其中声明所需操作及期望的最终状态。平台接收到配置文件后，会自动解析并执行相应操作，将底层资源调整到声明的状态。使用声明式 API 有助于快速追溯操作历史，实现回退或回滚。</p>    <div id="aplayer-wmHwpMgE" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="1459390399" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
-    <categories>
-      
-      <category>顶层思维</category>
-      
-    </categories>
+    <summary type="html">云原生，启动</summary>
     
     
-    <tags>
-      
-      <tag>云原生</tag>
-      
-    </tags>
+    
+    <category term="顶层思维" scheme="https://sheep-in-box.github.io/categories/%E9%A1%B6%E5%B1%82%E6%80%9D%E7%BB%B4/"/>
+    
+    
+    <category term="云原生" scheme="https://sheep-in-box.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【K3s踩坑记录】1.集群搭建</title>
-    <link href="/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"/>
-    <url>/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</url>
+    <link href="https://sheep-in-box.github.io/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"/>
+    <id>https://sheep-in-box.github.io/2024/08/08/%E3%80%90K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%E3%80%911-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</id>
+    <published>2024-08-08T02:53:11.000Z</published>
+    <updated>2024-08-09T02:46:52.709Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>最近在学习云原生相关的内容，比如K8s，跟着b站上的<a href="%E3%80%90Kubernetes%E5%85%A5%E9%97%A890%E5%88%86%E9%92%9F%E7%B2%BE%E8%AE%B2(%E5%90%88%E9%9B%86)%E2%80%94%E5%8F%AF%E8%83%BD%E6%98%AFB%E7%AB%99%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84K8S%E6%95%99%E7%A8%8B%E3%80%91https://www.bilibili.com/video/BV1k24y197KC?p=8&vd_source=e99b4d741025eb78b4f98ebfc1dc561f">视频教程</a>和<a href="https://www.yuque.com/wukong-zorrm/qdoy5p">笔记</a>，使用K3s搭建集群。但是因为某种不可抗力原因等，踩了不少坑，故开一篇笔记来记录一下踩的坑。</p><h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><ul><li>K3s版本：v1.30.3+k3s1</li><li>集群规划</li></ul><table><thead><tr><th>主机名</th><th>IP地址</th><th>配置</th><th>系统</th><th>网络</th></tr></thead><tbody><tr><td>k8s-master</td><td>192.168.6.170</td><td>内存：2G</td><td>CentOS</td><td>互联网:NAT网络</td></tr><tr><td>k8s-worker1</td><td>192.168.6.171</td><td>CPU：2核</td><td>7.9.2009</td><td>内部网络: Host-only</td></tr><tr><td>k8s-worker2</td><td>192.168.6.172</td><td>硬盘：20G</td><td>最小化安装</td><td></td></tr></tbody></table><h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><p>先配置好一台虚拟机，再进行克隆</p><ul><li>关闭防火墙<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">systemctl disable firewalld --now</code></pre></div></figure></li><li>配置DHCP*（坑点，不然没法上网）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd &#x2F;etc&#x2F;sysconfig&#x2F;network-scriptsls# 可以看到以下内容# ifcfg-ens33  ifdown-eth ...# ifcfg-ens33 即为要修改的配置，具体是那个网卡可以通过ip addr# 得到vi ifcfg-ens33# 修改 BOOTPROTO&#x3D;dhcp# 修改 ONBOOT&#x3D;yes# 重启，好像也可以不重启</code></pre></div></figure></li><li>如果能够联网，后续修改成静态ip<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens33# 修改 BOOTPROTO&#x3D;static# 添加 IPADDR NETMASK GATEWAY DNS1 DNS2字段</code></pre></div></figure></li></ul><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">- 配置yum镜像源*（坑点）&#96;&#96;&#96;bashmv &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo.backupcurl -o &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;Centos-7.repo</code></pre></div></figure><ul><li>设置selinux（需要联网）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">yum install -y container-selinux selinux-policy-baseyum install -y https:&#x2F;&#x2F;rpm.rancher.io&#x2F;k3s&#x2F;latest&#x2F;common&#x2F;centos&#x2F;7&#x2F;noarch&#x2F;k3s-selinux-0.2-1.el7_8.noarch.rpm# 如果虚拟机下载不了，手动下载之后导入到虚拟机中再用yum安装</code></pre></div></figure></li></ul><h2 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h2><p>从github仓库获取<a href="https://github.com/k3s-io/k3s">https://github.com/k3s-io/k3s</a><br>分别下载安装脚本<code>install.sh</code>、二进制文件<code>k3s</code>、必要的镜像包<code>k3s-airgap-images-amd64.tar.gz</code><br>直接导入到<code>~</code>目录下</p><h2 id="执行安装前的准备"><a href="#执行安装前的准备" class="headerlink" title="执行安装前的准备"></a>执行安装前的准备</h2><ul><li>将<code>k3s</code>二进制文件移动到<code>/usr/local/bin</code>目录，并添加执行权限<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mv k3s &#x2F;usr&#x2F;local&#x2F;binchmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;k3s</code></pre></div></figure></li><li>将镜像移动到<code>/var/lib/rancher/k3s/agent/images/</code>目录（无需解压）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;images&#x2F;cp .&#x2F;k3s-airgap-images-amd64.tar.gz &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;images&#x2F;</code></pre></div></figure></li><li>添加执行权限<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">chmod +x install.sh</code></pre></div></figure></li></ul><h2 id="克隆虚拟机"><a href="#克隆虚拟机" class="headerlink" title="克隆虚拟机"></a>克隆虚拟机</h2><ul><li>将当前准备好的虚拟机（假定为master）克隆两个worker，最好打个快照</li><li>克隆的两个worker节点重新生成MAC地址</li><li>给所有节点重新设置hostname<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">hostnamectl set-hostname &lt;newhostname&gt;</code></pre></div></figure></li></ul><h1 id="K3s部署过程"><a href="#K3s部署过程" class="headerlink" title="K3s部署过程"></a>K3s部署过程</h1><h2 id="执行安装脚本"><a href="#执行安装脚本" class="headerlink" title="执行安装脚本"></a>执行安装脚本</h2><ul><li>master节点执行<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 离线安装INSTALL_K3S_SKIP_DOWNLOAD&#x3D;true .&#x2F;install.sh# 安装完成后，查看节点状态kubectl get node# 查看tokencat &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;server&#x2F;node-token# 复制得到的token# 监测节点情况watch -n 1 kubectl get node</code></pre></div></figure></li><li>worker节点执行<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">INSTALL_K3S_SKIP_DOWNLOAD&#x3D;true \K3S_URL&#x3D;https:&#x2F;&#x2F;192.168.6.170:6443 \K3S_TOKEN&#x3D;xxx \.&#x2F;install.sh</code></pre></div></figure></li><li>此时master节点应该可以监测到<figure><div class="code-wrapper"><pre class="line-numbers language-text" data-language="text"><code class="language-text">NAME          STATUS   ROLES                  AGE    VERSIONk8s-master    Ready    control-plane,master   xmxs   v1.30.3+k3s1k8s-worker1   Ready    &lt;none&gt;                 xmxs   v1.30.3+k3s1k8s-worker2   Ready    &lt;none&gt;                 xmxs   v1.30.3+k3s1</code></pre></div></figure></li></ul><h2 id="坑点：worker节点无法使用kubectl命令"><a href="#坑点：worker节点无法使用kubectl命令" class="headerlink" title="坑点：worker节点无法使用kubectl命令"></a>坑点：worker节点无法使用<code>kubectl</code>命令</h2><ul><li>跟着做到这一步发现，master节点可以使用<code>kubectl</code>，但是worker节点会报错<figure><div class="code-wrapper"><pre class="line-numbers language-text" data-language="text"><code class="language-text">W0206 03:45:01.740148    9354 loader.go:222]Config not found: &#x2F;etc&#x2F;rancher&#x2F;k3s&#x2F;k3s.yamlE0206 03:45:01.741036    9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refusedE0206 03:45:01.741740 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refusedE0206 03:45:01.743821 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refusedE0206 03:45:01.745916 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refusedE0206 03:45:01.747884 9354 memcache.go:238] couldn&#39;t get current server APl group list: Get http:&#x2F;&#x2F;localhost:8080&#x2F;api?timeout-32s dial tcp 127.0.0.1:8080:connect: connection refusedThe connection to the server localhost:8080 was refused - did you specify the right host or port?</code></pre></div></figure></li><li>一开始网上搜索还以为是部署错误，后来才知道原来是正常的，是由于没有集群密钥。如果需要在agent节点运行<code>kubectl</code>命令，那么执行以下操作<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir ~&#x2F;.kube  scp 192.168.6.170:&#x2F;etc&#x2F;rancher&#x2F;k3s&#x2F;k3s.yaml ~&#x2F;.kube&#x2F;config</code></pre></div></figure></li><li>然后替换config中的server ip地址<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vi ~&#x2F;.kube&#x2F;config# server: https:&#x2F;&#x2F;192.168.6.170:6443</code></pre></div></figure></li><li>至此，就可以在worker节点运行<code>kubectl</code>命令了</li></ul><h2 id="配置镜像源（大坑）"><a href="#配置镜像源（大坑）" class="headerlink" title="配置镜像源（大坑）"></a>配置镜像源（大坑）</h2><p>总算把节点配置完成了，但是后面还有一大关等着，就是配置镜像源。由于不可言说的原因，如今国内想要拉取镜像必须通过镜像源，而在那个时间节点之后很多的重要镜像源都失效了。而网上找到的配置教程很多是过时的，不止是镜像源过时，配置镜像源的方法也过时了，导致一片混乱。借由这篇笔记一次性讲明白。</p><ul><li>查看配置文件，K3s会自动生成containerd的配置文件<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cat &#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;etc&#x2F;containerd&#x2F;config.toml</code></pre></div></figure></li><li>可以看都关于registry的配置<figure><div class="code-wrapper"><pre class="line-numbers language-text" data-language="text"><code class="language-text">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry]  config_path &#x3D; &quot;&#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;etc&#x2F;containerd&#x2F;certs.d&quot;</code></pre></div></figure></li><li>这个<code>/var/lib/rancher/k3s/agent/etc/containerd/certs.d</code>就是当前containerd获取镜像源的路径。很多老教程的提供的方法是修改<code>config.toml</code>（重新启动K3s会重置），或者复制一个<code>config.toml.tmpl</code>然后在上面修改，这样的做法都是过时的，不要用！错误示范<figure><div class="code-wrapper"><pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"># 不要学！# 在 config.toml.tmpl 文件中添加[plugins.cri.registry.mirrors]  [plugins.cri.registry.mirrors.&quot;docker.io&quot;]    endpoint &#x3D; [&quot;https:&#x2F;&#x2F;docker.mirrors.ustc.edu.cn&quot;] # 镜像源也是过时的</code></pre></div></figure></li><li>正确的配置方法，应该是新建<code>/etc/rancher/k3s/registries.yaml</code>，写入这个配置文件来配置镜像源（如果没有这个路径就创建）<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p &#x2F;etc&#x2F;rancher&#x2F;k3svi &#96;&#x2F;etc&#x2F;rancher&#x2F;k3s&#x2F;registries.yaml</code></pre></div></figure></li><li>以下是<code>registries.yaml</code>参考，里面的镜像源目前可以用，但是不能保证不过时<figure><div class="code-wrapper"><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">mirrors:  docker.io:    endpoint:      - &quot;https:&#x2F;&#x2F;docker.m.daocloud.io&quot;  quay.io:    endpoint:      - &quot;https:&#x2F;&#x2F;quay.m.daocloud.io&quot;  registry.k8s.io:    endpoint:      - &quot;https:&#x2F;&#x2F;k8s.m.daocloud.io&quot;  gcr.io:    endpoint:      - &quot;https:&#x2F;&#x2F;gcr.m.daocloud.io&#x2F;&quot;  k8s.gcr.io:    endpoint:      - &quot;https:&#x2F;&#x2F;k8s-gcr.m.daocloud.io&quot;  ghcr.io:    endpoint:      - &quot;https:&#x2F;&#x2F;ghcr.m.daocloud.io&quot;</code></pre></div></figure></li><li>另外，不止是master节点需要进行配置，worker节点也需要，网上搜索的结果是worker节点会从master获取镜像源，似乎也是不对的！创建pod进行镜像拉取时，默认会在pod所创建的worker节点上进行拉取，也就会使用worker节点上的镜像源配置</li><li>重启每个节点<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># mastersystemctl restart k3s# workersystemctl restart k3s-agent</code></pre></div></figure></li></ul><h2 id="测试创建pod（坑）"><a href="#测试创建pod（坑）" class="headerlink" title="测试创建pod（坑）"></a>测试创建pod（坑）</h2><ul><li>创建一个nginx的pod试试看，在master节点上执行<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">kubectl run mynginx --image&#x3D;nginx# 查看Podkubectl get pod# 描述kubectl describe pod mynginx# 查看Pod的运行日志kubectl logs mynginx</code></pre></div></figure></li><li>如果失败了，可能需要先在对应的worker节点上把镜像拉下来，再进行创建。如果失败有可能是因为创建pod的时候无限从网络拉取pod，而网络又不稳定，于是崩溃<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">crictl pull nginx</code></pre></div></figure></li><li>你可能发现这样还是起不来，为什么呢？原来在于pod的拉取策略：<code>imagePullPolicy</code>。如果没有指定拉取策略，同时拉取镜像为<code>latest</code>或无标签（那也是latest），<code>imagePullPolicy</code>会自动设置为<code>Always</code>，意为永远都会从网络上pull，即使本地有<code>latest</code>的镜像（djw：这个b有点蠢嘛）。解决办法有两种，一种是创建镜像的时候指定事先下好的版本，一种是指定<code>imagePullPolicy</code>为<code>IfNotPresent</code>，也就是先判断是否在本地存在，如果有就不拉取。<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">kubectl run mynginx --image&#x3D;nginx --image-pull-policy&#x3D;IfNotPresent</code></pre></div></figure></li></ul><h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>这样，总算是把基本的环境部署好了，没想到这几个步骤就有如此多的坑，有不可抗力原因，有网络上的过时信息&#x2F;垃圾教程，特意去翻了K3s和containerd的文档，以及github的issues和K3s论坛，都没有非常明确的解答和教程，好在第一步终于是走出去了，真是一场酣畅淋漓的赤石啊</p>    <div id="aplayer-pSrGhqKx" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="411921883" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
-    <categories>
-      
-      <category>K3s踩坑记录</category>
-      
-    </categories>
+    <summary type="html">真是一场酣畅淋漓的赤石啊</summary>
     
     
-    <tags>
-      
-      <tag>云原生</tag>
-      
-      <tag>K8s</tag>
-      
-    </tags>
+    
+    <category term="K3s踩坑记录" scheme="https://sheep-in-box.github.io/categories/K3s%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <category term="云原生" scheme="https://sheep-in-box.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/"/>
+    
+    <category term="K8s" scheme="https://sheep-in-box.github.io/tags/K8s/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【Go Trick】2.接口实现确认</title>
-    <link href="/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/"/>
-    <url>/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/</url>
+    <link href="https://sheep-in-box.github.io/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/"/>
+    <id>https://sheep-in-box.github.io/2024/08/02/%E3%80%90Go-Trick%E3%80%912-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%A1%AE%E8%AE%A4/</id>
+    <published>2024-08-02T14:55:35.000Z</published>
+    <updated>2024-08-02T14:58:00.334Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="接口概述"><a href="#接口概述" class="headerlink" title="接口概述"></a>接口概述</h1><p>Go语言中的接口定义了一组方法的集合，接口本身不能实例化，需要具体的类型实现。<br>一个类型可以实现多个接口，如果该类型的包含了一个接口的所有同名方法，它就会自动实现这个接口。（接口即合约）</p><p>首先，接口只能声明方法，不能提供方法的具体实现。一个具体的类型实现了接口的全部方法，它就可以被视作实现了这个接口，可以将地址赋值给该接口类型的变量，类似于C++的基类指针，这是Go实现多态的关键。</p><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Person interface &#123;getName() string  &#x2F;&#x2F; 接口声明的方法&#125;type Student struct &#123;name stringage  int&#125;&#x2F;&#x2F; Student类实现了getName()方法，因此Student实现了Person接口func (student *Student) getName() string &#123;return student.name&#125;func main() &#123;var person Person &#x3D; &amp;Student&#123;name: &quot;Sheep&quot;,age:  18,&#125;fmt.Println(person.getName())&#125;</code></pre></div></figure><p>如上，可以将<code>Student</code>取地址，赋值给<code>person</code>变量，通过<code>person.getName()</code>即可调用Student的<code>getName()</code>方法。<br>如果此时将<code>Student</code>的<code>getName()</code>方法注释掉，IDE就会高亮显示错误，编译也会有响应报错</p><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">cannot use &amp;Student&#123;…&#125; (value of type *Student) as Person value in variable declaration: *Student does not implement Person (missing method getName)</code></pre></div></figure><h1 id="接口实现检查"><a href="#接口实现检查" class="headerlink" title="接口实现检查"></a>接口实现检查</h1><p>由于在Go语言中接口是一种合约，并不会显式地进行检查，如Java中的<code>implements</code>关键字显式指定某个类实现某个接口，Go只会在结构体赋值给接口变量时才会进行判断。那么，如果代码中没有进行实际的多态操作，该怎么确保某个结构体实现特定的接口呢？在实际开发过程中，代码很庞杂，接口也可能有多个方法，难道只能一个个去比对方法名吗？<br>一个误区是，以为在结构体中包含匿名的接口类型成员变量就能显式指定接口的实现，如下</p><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Student struct &#123;name stringage  intPerson&#125;</code></pre></div></figure><p>其实并非如此，这只是Go语言匿名嵌入的特性，代表<code>Student</code>结构体有一个匿名的<code>Person</code>成员，跟接口实现没有半毛钱关系。<br>正确的思路是，在定义完结构体之后，直接进行一次没有实际意义的强制类型转换不就好了？答案是这样</p><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">var _ Person &#x3D; (*Student)(nil)</code></pre></div></figure><p>下面来解释一下这段代码，这就是Go编程常用到的接口检查器语法。<code>var</code>代表进行一次全局变量的定义，<code>_ Person</code>意思是一个匿名的<code>Person</code>变量，等号右边则是对<code>nil</code>空值进行强制类型转换，变成指针<code>*Student</code>。这个语句能够编译成功的条件就是<code>Person</code>类型的变量能接受<code>*Student</code>类型的赋值，即<code>Student</code>实现了<code>Person</code>接口，而因为是定义了匿名变量，因此也不会对代码逻辑产生影响。<br>Go为了体现”接口即合约“的思想，让接口的实现变成隐式的，然而人们最终还是为了做显式确认，创造出了接口检查器语法，这是好是坏呢，Go语言的设计者乐见这一点吗？</p>    <div id="aplayer-ZROQfOQU" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="1349937455" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
-    <categories>
-      
-      <category>Go Trick</category>
-      
-    </categories>
+    <summary type="html">勾浪诡计第二集</summary>
     
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-    </tags>
+    
+    <category term="Go Trick" scheme="https://sheep-in-box.github.io/categories/Go-Trick/"/>
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【Go Trick】1.接口型函数-xxxFunc</title>
-    <link href="/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/"/>
-    <url>/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/</url>
+    <link href="https://sheep-in-box.github.io/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/"/>
+    <id>https://sheep-in-box.github.io/2024/08/01/%E3%80%90Go-Trick%E3%80%911-%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0-xxxFunc/</id>
+    <published>2024-08-01T09:23:51.000Z</published>
+    <updated>2024-08-02T07:56:38.768Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>参考 <a href="https://geektutu.com/post/7days-golang-q1.html">https://geektutu.com/post/7days-golang-q1.html</a></p>    <div id="aplayer-vOOWgpLX" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="1349929719" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
-    <categories>
-      
-      <category>Go Trick</category>
-      
-    </categories>
+    <summary type="html">勾浪诡计，待更新</summary>
     
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-    </tags>
+    
+    <category term="Go Trick" scheme="https://sheep-in-box.github.io/categories/Go-Trick/"/>
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【Go设计模式】2.创建型-简单工厂模式</title>
-    <link href="/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%912-%E5%88%9B%E5%BB%BA%E5%9E%8B-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
-    <url>/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%912-%E5%88%9B%E5%BB%BA%E5%9E%8B-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%912-%E5%88%9B%E5%BB%BA%E5%9E%8B-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%912-%E5%88%9B%E5%BB%BA%E5%9E%8B-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</id>
+    <published>2024-07-25T06:34:57.000Z</published>
+    <updated>2024-07-25T06:34:47.875Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>简单工厂并不属于GoF的23种设计模式，它是开发者认为的一种非常简易的设计模式。</p><h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="287.5px" preserveAspectRatio="none" style="width:658px;height:287px;" version="1.1" viewBox="0 0 658 287" width="658.3333px" zoomAndPan="magnify"><title>Simple Factory Pattern</title><defs><linearGradient id="g19w2qd6matbki0" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#999890"/><stop offset="100%" stop-color="#8E8C84"/></linearGradient></defs><g><rect fill="url(#g19w2qd6matbki0)" height="47.168" id="_title" rx="4.1667" ry="4.1667" style="stroke:#807E77;stroke-width:1.0416666666666667;" width="294.7062" x="177.1614" y="20.8333"/><text fill="#325D88" font-family="Verdana" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="271.7896" x="188.6197" y="51.6296">Simple Factory Pattern</text><!--class Product--><g id="elem_Product"><rect codeLine="4" fill="#325D88" height="50.8382" id="Product" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="98.6263"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="98.6263"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="128.6312"/><rect codeLine="4" fill="none" height="50.8382" id="Product" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="85.6257" x="439.7813" y="98.6263"/><ellipse cx="454.3646" cy="115.7121" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M451.2559,112.88 L451.2559,111.285 L456.6758,111.285 L456.6758,112.88 L454.8691,112.88 L454.8691,118.8045 L456.6758,118.8045 L456.6758,120.3996 L451.2559,120.3996 L451.2559,118.8045 L453.0625,118.8045 L453.0625,112.88 L451.2559,112.88 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" font-style="italic" lengthAdjust="spacing" textLength="43.959" x="473.1146" y="119.6789">Product</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="440.8229" x2="524.3653" y1="132.7979" y2="132.7979"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="440.8229" x2="524.3653" y1="141.1312" y2="141.1312"/></g><!--class ConcreteProductA--><g id="elem_ConcreteProductA"><rect codeLine="7" fill="#325D88" height="50.8382" id="ConcreteProductA" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="224.8867"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="224.8867"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="254.8916"/><rect codeLine="7" fill="none" height="50.8382" id="ConcreteProductA" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.34" x="318.2604" y="224.8867"/><ellipse cx="332.8438" cy="241.9725" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M334.748,246.3996 Q334.3249,246.6112 333.8529,246.7251 Q333.3809,246.839 332.8763,246.839 Q331.0208,246.839 330.0443,245.6346 Q329.084,244.4139 329.084,242.119 Q329.084,239.8078 330.0443,238.6034 Q331.0208,237.3826 332.8763,237.3826 Q333.3809,237.3826 333.8529,237.4966 Q334.3411,237.5942 334.748,237.8221 L334.748,239.8241 Q334.2923,239.4009 333.8529,239.2056 Q333.4134,238.994 332.9577,238.994 Q331.9648,238.994 331.4603,239.7915 Q330.9557,240.5728 330.9557,242.119 Q330.9557,243.6489 331.4603,244.4302 Q331.9648,245.2114 332.9577,245.2114 Q333.4134,245.2114 333.8529,245.0161 Q334.2923,244.8208 334.748,244.3976 L334.748,246.3996 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="103.6733" x="351.5938" y="245.9393">ConcreteProductA</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="319.3021" x2="462.5587" y1="259.0583" y2="259.0583"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="319.3021" x2="462.5587" y1="267.3916" y2="267.3916"/></g><!--class ConcreteProductB--><g id="elem_ConcreteProductB"><rect codeLine="10" fill="#325D88" height="50.8382" id="ConcreteProductB" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="224.8867"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="224.8867"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="254.8916"/><rect codeLine="10" fill="none" height="50.8382" id="ConcreteProductB" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="145.3623" x="500.5417" y="224.8867"/><ellipse cx="515.125" cy="241.9725" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M517.0293,246.3996 Q516.6061,246.6112 516.1341,246.7251 Q515.6621,246.839 515.1576,246.839 Q513.3021,246.839 512.3255,245.6346 Q511.3652,244.4139 511.3652,242.119 Q511.3652,239.8078 512.3255,238.6034 Q513.3021,237.3826 515.1576,237.3826 Q515.6621,237.3826 516.1341,237.4966 Q516.6224,237.5942 517.0293,237.8221 L517.0293,239.8241 Q516.5736,239.4009 516.1341,239.2056 Q515.6947,238.994 515.2389,238.994 Q514.2461,238.994 513.7415,239.7915 Q513.237,240.5728 513.237,242.119 Q513.237,243.6489 513.7415,244.4302 Q514.2461,245.2114 515.2389,245.2114 Q515.6947,245.2114 516.1341,245.0161 Q516.5736,244.8208 517.0293,244.3976 L517.0293,246.3996 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="103.6957" x="533.875" y="245.9393">ConcreteProductB</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="501.5833" x2="644.8623" y1="259.0583" y2="259.0583"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="501.5833" x2="644.8623" y1="267.3916" y2="267.3916"/></g><!--class Factory--><g id="elem_Factory"><rect codeLine="13" fill="#325D88" height="74.5931" id="Factory" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="86.7513"/><rect fill="#476D94" height="34.1715" rx="4.1667" ry="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="86.7513"/><rect fill="#476D94" height="4.1667" style="stroke:#476D94;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="116.7562"/><rect codeLine="13" fill="none" height="74.5931" id="Factory" rx="4.1667" ry="4.1667" style="stroke:#2D547A;stroke-width:1.0416666666666667;" width="246.4401" x="17.7083" y="86.7513"/><ellipse cx="110.0998" cy="103.8371" fill="none" rx="10.4167" ry="10.4167" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><path d="M112.0041,108.2642 Q111.5809,108.4757 111.1089,108.5897 Q110.6369,108.7036 110.1323,108.7036 Q108.2769,108.7036 107.3003,107.4992 Q106.34,106.2785 106.34,103.9836 Q106.34,101.6724 107.3003,100.4679 Q108.2769,99.2472 110.1323,99.2472 Q110.6369,99.2472 111.1089,99.3612 Q111.5972,99.4588 112.0041,99.6867 L112.0041,101.6886 Q111.5484,101.2655 111.1089,101.0701 Q110.6695,100.8586 110.2137,100.8586 Q109.2209,100.8586 108.7163,101.6561 Q108.2118,102.4373 108.2118,103.9836 Q108.2118,105.5135 108.7163,106.2948 Q109.2209,107.076 110.2137,107.076 Q110.6695,107.076 111.1089,106.8807 Q111.5484,106.6854 112.0041,106.2622 L112.0041,108.2642 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="42.9072" x="135.0998" y="107.8039">Factory</text><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="18.75" x2="263.1068" y1="120.9229" y2="120.9229"/><line style="stroke:#2D547A;stroke-width:1.0416666666666667;" x1="18.75" x2="263.1068" y1="129.2562" y2="129.2562"/><ellipse cx="29.1667" cy="146.8628" fill="none" rx="3.125" ry="3.125" style="stroke:#2D547A;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="Verdana" font-size="11.4583" lengthAdjust="spacing" textLength="209.9818" x="42.7083" y="149.2671">CreateProduct(type: String): Product</text></g><!--reverse link Product to ConcreteProductA--><g id="link_Product_ConcreteProductA"><path d="M453.128,165.0055 C437.1489,186.6617 425.2083,202.8242 409.2292,224.4701 " fill="none" id="Product-backto-ConcreteProductA" style="stroke:#325D88;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="464.2604,149.918,448.0989,161.2947,458.1572,168.7163,464.2604,149.918" style="stroke:#325D88;stroke-width:3.125;"/></g><!--reverse link Product to ConcreteProductB--><g id="link_Product_ConcreteProductB"><path d="M511.7708,165.0644 C527.5729,186.7207 539.3333,202.8242 555.125,224.4701 " fill="none" id="Product-backto-ConcreteProductB" style="stroke:#325D88;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="500.7188,149.918,506.722,168.7484,516.8196,161.3804,500.7188,149.918" style="stroke:#325D88;stroke-width:3.125;"/></g><!--link Factory to Product--><g id="link_Factory_Product"><path codeLine="17" d="M264.2813,124.043 C325.4479,124.043 389.1875,124.043 433.0729,124.043 " fill="none" id="Factory-to-Product" style="stroke:#325D88;stroke-width:3.125;"/><polygon fill="#325D88" points="439.3229,124.043,429.9479,119.8763,434.1146,124.043,429.9479,128.2096,439.3229,124.043" style="stroke:#325D88;stroke-width:3.125;"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacing" textLength="127.4414" x="288.4271" y="112.7291">CreateProduct(type)</text></g><!--SRC=[ZSun2i9040NGVaunTWRn0Ya43LW7Se9XC-f2TZRiVeiGlBjHt5I2Lh-O_pwpmKs3SXRhCw8fmMDGxdmObpYBGqmJjm9eCY9lIrx4ARSfzdS7dkb1v0R9cPjeBYdqSphoUoIe8VzHF_sebrzcOjvnarHMkiKqQiqTahThLHVziaNj3-jc_GLNJm00]--></g></svg><h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Product interface &#123;&#125;</code></pre></div></figure><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type ConcreteProductA struct &#123;Product &#x2F;&#x2F;便于理解&#125;</code></pre></div></figure><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type ConcreteProductB struct &#123;Product &#x2F;&#x2F;便于理解&#125;</code></pre></div></figure><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">type Factory struct &#123;&#125;func (fac *Factory) CreateProduct(type string) Product &#123;var product Productswitch type &#123;case &quot;ConcreteProductA&quot;: product &#x3D; new(ConcreteProductA)case &quot;ConcreteProductB&quot;: product &#x3D; new(ConcreteProductB)&#125;return product&#125;</code></pre></div></figure><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">func main() &#123;factory :&#x3D; new(Factory)concreteProductA :&#x3D; factory.CreateProduct(&quot;ConcreteProductA&quot;)concreteProductA.dosth()concreteProductB :&#x3D; factory.CreateProduct(&quot;ConcreteProductB&quot;)concreteProductB.dosth()&#125;</code></pre></div></figure>]]></content>
     
     
-    <categories>
-      
-      <category>Go设计模式</category>
-      
-    </categories>
+    <summary type="html">供复习使用</summary>
     
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-      <tag>设计模式</tag>
-      
-    </tags>
+    
+    <category term="Go设计模式" scheme="https://sheep-in-box.github.io/categories/Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="设计模式" scheme="https://sheep-in-box.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【Go设计模式】1.设计模式总览</title>
-    <link href="/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%911-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E8%A7%88/"/>
-    <url>/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%911-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E8%A7%88/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%911-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E8%A7%88/"/>
+    <id>https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%911-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E8%A7%88/</id>
+    <published>2024-07-25T06:33:19.000Z</published>
+    <updated>2024-08-21T07:22:44.764Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>其实<a href="https://refactoringguru.cn/design-patterns/go">GURU</a>已经很完善了，系列搁置中，低优先级更新</p><h1 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h1><ul><li>简单工厂*（Simple Factory）</li><li><strong>工厂方法</strong>（Factory Method）</li><li><strong>抽象工厂</strong>（Abstract Factory）</li><li><strong>单例</strong>（Singleton）</li><li><strong>生成器</strong>（Builder）</li><li><strong>原型</strong>（Prototype）</li></ul><h1 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h1><ul><li><strong>适配器</strong>（Adapter）</li><li><strong>组合</strong>（Composite）</li><li><strong>装饰</strong>（Decorator）</li><li><strong>外观</strong>（Façade）</li><li><strong>代理</strong>（Proxy）</li><li><strong>桥接</strong>（Bridge）</li><li><strong>享元</strong>（Flyweight）</li></ul><h1 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h1><ul><li><strong>观察者</strong>（Observer）</li><li><strong>命令</strong>（Command）</li><li><strong>状态</strong>（State）</li><li><strong>策略</strong>（Strategy）</li><li><strong>模板方法</strong>（Template Method）</li><li><strong>迭代器</strong>（Iterator）</li><li><strong>责任链</strong>（Chain of Responsibility）</li><li><strong>访问者</strong>（Visitor）</li><li><strong>备忘录</strong>（Memento）</li><li><strong>中介者</strong>（Mediator）</li></ul>]]></content>
     
     
+    <summary type="html">留待更新</summary>
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-      <tag>设计模式</tag>
-      
-    </tags>
+    
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="设计模式" scheme="https://sheep-in-box.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【Go垃圾回收机制】0.垃圾回收概述</title>
-    <link href="/2024/07/25/%E3%80%90Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E3%80%910-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/"/>
-    <url>/2024/07/25/%E3%80%90Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E3%80%910-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E3%80%910-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/"/>
+    <id>https://sheep-in-box.github.io/2024/07/25/%E3%80%90Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E3%80%910-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/</id>
+    <published>2024-07-25T02:57:49.000Z</published>
+    <updated>2024-07-25T05:37:41.335Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>之前一直就记了点GMP架构，golang的gc机制一直没去了解，现在看了发现其实相当好理解，go确实是一门直截了当的语言。</p><h2 id="什么是垃圾回收"><a href="#什么是垃圾回收" class="headerlink" title="什么是垃圾回收"></a>什么是垃圾回收</h2><p>Garbage Collection，简称GC，也就是垃圾回收，是一种自动内存管理的机制。当程序向操作系统申请的内存不再需要时，垃圾回收主动将其回收并供其他代码进行内存申请时候复用，或者将其归还给操作系统，这种针对内存级别资源的自动回收过程，即为垃圾回收。而负责垃圾回收的程序组件，即为垃圾回收器。</p><h2 id="垃圾回收的几个概念"><a href="#垃圾回收的几个概念" class="headerlink" title="垃圾回收的几个概念"></a>垃圾回收的几个概念</h2><h3 id="1-根对象"><a href="#1-根对象" class="headerlink" title="1. 根对象"></a>1. 根对象</h3><p>根对象在垃圾回收的术语中又叫做根集合，它是垃圾回收器在标记过程时最先检查的对象，包括：</p><ul><li><strong>全局变量</strong>：程序在编译期就能确定的那些存在于程序整个生命周期的变量。</li><li><strong>执行栈</strong>：每个 goroutine 都包含自己的执行栈，这些执行栈上包含栈上的变量及指向分配的堆内存区块的指针。</li><li><strong>寄存器</strong>：寄存器的值可能表示一个指针，参与计算的这些指针可能指向某些赋值器分配的堆内存区块。</li></ul><h3 id="2-STW"><a href="#2-STW" class="headerlink" title="2. STW"></a>2. STW</h3><p>STW 可以是 Stop the World 的缩写，也可以是 Start the World 的缩写。通常意义上指指代从 Stop the World 这一动作发生时到 Start the World 这一动作发生时这一段时间间隔，即<del>砸瓦鲁多</del>万物静止。STW 在垃圾回收过程中为了保证实现的正确性、防止无止境的内存增长等问题而不可避免的需要停止赋值器进一步操作对象图的一段过程。在STW过程中整个用户代码被停止或者放缓执行， STW 越长，对用户代码造成的影响（例如延迟）就越大，所以垃圾回收算法的核心就是减少STW时间，减轻GC对程序的影响。</p><p>其他具体的内容详见 <a href="https://learnku.com/docs/go-interviews/9-la-ji-hui-shou-qi/16576">https://learnku.com/docs/go-interviews/9-la-ji-hui-shou-qi/16576</a><br>直接从go语言的GC机制开始写了，这章就不写那么多了。</p>    <div id="aplayer-DTwbXMsY" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="22818003" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
+    <summary type="html">什么是垃圾回收（GC）</summary>
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-      <tag>垃圾回收</tag>
-      
-      <tag>GC</tag>
-      
-    </tags>
+    
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="垃圾回收" scheme="https://sheep-in-box.github.io/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/"/>
+    
+    <category term="GC" scheme="https://sheep-in-box.github.io/tags/GC/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【RabbitMQ】Go实现</title>
-    <link href="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/"/>
-    <url>/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/"/>
+    <id>https://sheep-in-box.github.io/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/</id>
+    <published>2024-07-24T07:56:30.000Z</published>
+    <updated>2024-07-24T07:57:13.029Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>RabbitMQ是一个消息代理，底层为队列，支持AMQP（高级消息队列协议）。</p><h2 id="消息队列的作用"><a href="#消息队列的作用" class="headerlink" title="消息队列的作用"></a>消息队列的作用</h2><ul><li><strong>应用解耦</strong>：生产者和消费者之间通过消息传递进行通信，而非直接调用。</li><li><strong>异步通信</strong>：消息的发送方可以在不等待响应的情况下继续执行，消息会被存储在队列中等待接收者处理，提高了系统的吞吐量。</li><li><strong>削峰填谷</strong>：在遇到瞬时的高流量情况下，消息队列作为缓冲区，防止数据过载。</li></ul><h2 id="消息队列的缺点"><a href="#消息队列的缺点" class="headerlink" title="消息队列的缺点"></a>消息队列的缺点</h2><ul><li><strong>降低系统的可用性</strong>：系统引入外部依赖越多，越容易挂掉。</li><li><strong>系统复杂度提高</strong>：需要面对各种问题，比如保证消息没有被重复消费、处理信息丢失的情况、保证消息传递的顺序性。</li><li><strong>一致性问题</strong>：多个系统处理消息可能成功可能不成功，造成数据不一致。</li></ul><h2 id="Go使用RabbitMQ"><a href="#Go使用RabbitMQ" class="headerlink" title="Go使用RabbitMQ"></a>Go使用RabbitMQ</h2><p>首先，安装rabbitmq</p><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">choco install rabbitmq</code></pre></div></figure><p>安装后，会自动启动服务，默认运行在本地<code>5672</code>端口，管理界面为<code>localhost:15672</code>，默认用户和密码均为guest<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724144435282.png"><br>接下来用go编写两段程序<code>send.go</code>和<code>receive.go</code>模拟消息发送方和接收方。</p><p><code>send.go</code>:</p><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">package mainimport (&quot;context&quot;&quot;log&quot;&quot;time&quot;amqp &quot;github.com&#x2F;rabbitmq&#x2F;amqp091-go&quot;)func main() &#123;&#x2F;&#x2F; 连接到RabbitMQ服务器（broker）conn, err :&#x3D; amqp.Dial(&quot;amqp:&#x2F;&#x2F;guest:guest@localhost:5672&#x2F;&quot;)if err !&#x3D; nil &#123;log.Fatalf(&quot;connection.open: %s&quot;, err)&#125;defer conn.Close()&#x2F;&#x2F; 创建channel（amqp.Channel）ch, err :&#x3D; conn.Channel()if err !&#x3D; nil &#123;log.Fatalf(&quot;channel.open: %s&quot;, err)&#125;defer ch.Close()&#x2F;&#x2F; 声明一个队列ch.QueueDeclare(&quot;hello&quot;, &#x2F;&#x2F; 队列名称，若该队列不存在则创建false,   &#x2F;&#x2F; durablefalse,   &#x2F;&#x2F; delete when unusedfalse,   &#x2F;&#x2F; exclusivefalse,   &#x2F;&#x2F; no-waitnil,     &#x2F;&#x2F; arguments)&#x2F;&#x2F; 发送消息到队列，超时时间设为2秒ctx, cancel :&#x3D; context.WithTimeout(context.Background(), 2*time.Second)defer cancel() &#x2F;&#x2F; 带超时context的固定写法msg :&#x3D; &quot;Hello World!&quot;ch.PublishWithContext(ctx,&quot;&quot;,      &#x2F;&#x2F; exchange&quot;hello&quot;, &#x2F;&#x2F; exchange为空时，key为队列名称false,   &#x2F;&#x2F; mandatoryfalse,   &#x2F;&#x2F; immediateamqp.Publishing&#123; &#x2F;&#x2F; 消息内容ContentType: &quot;text&#x2F;plain&quot;, &#x2F;&#x2F; MIME content typeBody:        []byte(msg),&#125;,)&#125;</code></pre></div></figure><p><code>receive.go</code></p><figure><div class="code-wrapper"><pre class="line-numbers language-go" data-language="go"><code class="language-go">package mainimport (&quot;log&quot;amqp &quot;github.com&#x2F;rabbitmq&#x2F;amqp091-go&quot;)func main() &#123;&#x2F;&#x2F; 连接到RabbitMQ服务器（broker）conn, err :&#x3D; amqp.Dial(&quot;amqp:&#x2F;&#x2F;guest:guest@localhost:5672&#x2F;&quot;)if err !&#x3D; nil &#123;log.Fatalf(&quot;connection.open: %s&quot;, err)&#125;defer conn.Close()&#x2F;&#x2F; 创建channel（amqp.Channel）ch, err :&#x3D; conn.Channel()if err !&#x3D; nil &#123;log.Fatalf(&quot;channel.open: %s&quot;, err)&#125;defer ch.Close()&#x2F;&#x2F; 声明一个队列，这里不需要声明队列，因为send.go已经声明过了&#x2F;&#x2F; 如果声明队列参数不一致，会报错&#x2F;&#x2F; ch.QueueDeclare(&#x2F;&#x2F; &quot;hello&quot;, &#x2F;&#x2F; 队列名称，若该队列不存在则创建&#x2F;&#x2F; false,   &#x2F;&#x2F; durable&#x2F;&#x2F; false,   &#x2F;&#x2F; delete when unused&#x2F;&#x2F; false,   &#x2F;&#x2F; exclusive&#x2F;&#x2F; false,   &#x2F;&#x2F; no-wait&#x2F;&#x2F; nil,     &#x2F;&#x2F; arguments&#x2F;&#x2F; )&#x2F;&#x2F; 接收消息，返回go语言原生channel（只读）deliverieCh, err :&#x3D; ch.Consume(&quot;hello&quot;, &#x2F;&#x2F; queue&quot;&quot;,      &#x2F;&#x2F; consumertrue,    &#x2F;&#x2F; auto-ackfalse,   &#x2F;&#x2F; exclusivefalse,   &#x2F;&#x2F; no-localfalse,   &#x2F;&#x2F; no-waitnil,     &#x2F;&#x2F; args)if err !&#x3D; nil &#123;log.Fatalf(&quot;basic.consume: %s&quot;, err)&#125;&#x2F;&#x2F; 从deliverieCh中读取消息for delivery :&#x3D; range deliverieCh &#123;log.Printf(&quot;Received a message: %s&quot;, delivery.Body)&#125;&#125;</code></pre></div></figure><p>运行<code>send.go</code>后可以在管理页面看到创建了一个队列。<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151614453.png"></p><p>运行<code>receive.go</code>后可以看到打印出接收到的消息。程序并没有结束运行，因为<code>deliverieCh</code>并没有关闭，所以consumer进程会一直阻塞等待下一条消息的到来。</p><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">2024&#x2F;07&#x2F;24 15:16:48 Received a message: Hello World!</code></pre></div></figure><p>回到管理页面可以看到该消息队列多了一个consumer<br><img src="/2024/07/24/%E3%80%90RabbitMQ%E3%80%91Go%E5%AE%9E%E7%8E%B0/IMG-20240724151916476.png"></p><p>按下<kbd>Ctrl</kbd>+<kbd>C</kbd>结束consumer进程，可以看到该队列下的consumer没有了（就不截图了）。</p><p>此后可以测试启动<code>receive.go</code>并反复执行<code>send.go</code>（可以把声明队列注释掉），都是可以收到消息的。</p>]]></content>
     
     
+    <summary type="html">RabbitMQ是一个消息代理，底层为队列，支持AMQP（高级消息队列协议）。</summary>
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-      <tag>中间件</tag>
-      
-      <tag>消息队列</tag>
-      
-      <tag>RabbitMQ</tag>
-      
-    </tags>
+    
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="中间件" scheme="https://sheep-in-box.github.io/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+    <category term="消息队列" scheme="https://sheep-in-box.github.io/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    
+    <category term="RabbitMQ" scheme="https://sheep-in-box.github.io/tags/RabbitMQ/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>【Go设计模式】0.面向对象设计原则</title>
-    <link href="/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
-    <url>/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
+    <id>https://sheep-in-box.github.io/2024/07/16/%E3%80%90Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%910-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</id>
+    <published>2024-07-16T09:27:54.000Z</published>
+    <updated>2024-07-17T01:51:56.916Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>供复习使用</p><h1 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h1><h2 id="S-O-L-I-D"><a href="#S-O-L-I-D" class="headerlink" title="S.O.L.I.D"></a>S.O.L.I.D</h2><table><thead><tr><th>简称</th><th>全称</th><th>中文</th></tr></thead><tbody><tr><td>SRP</td><td>Single Responsibility Principle</td><td>单一职责原则</td></tr><tr><td>OCP</td><td>Open-Closed Principle</td><td>开放封闭原则</td></tr><tr><td>LSP</td><td>Liskov Substitution Principle</td><td>里氏替换原则</td></tr><tr><td>ISP</td><td>Interface Segregation Principle</td><td>接口隔离原则</td></tr><tr><td>DIP</td><td>Dependency Inversion Principle</td><td>依赖倒置原则</td></tr></tbody></table><h3 id="1-单一职责原则"><a href="#1-单一职责原则" class="headerlink" title="1. 单一职责原则"></a>1. 单一职责原则</h3><blockquote><p>一个类应该只有一个引起它变化的原因。</p></blockquote><p>让一个类只负责一件事，当这个类需要做的事情过多的时候，就应该拆解这个类。<br>如果一个类承担的职责过多，相当于这些职责之间形成了紧耦合，一个职责的变化可能会削弱这个类完成其它职责的能力。</p><h3 id="2-开放封闭原则"><a href="#2-开放封闭原则" class="headerlink" title="2. 开放封闭原则"></a>2. 开放封闭原则</h3><blockquote><p>类应该对扩展开放，对修改关闭。</p></blockquote><p>扩展就是添加新功能的意思，因此该原则要求在添加新功能时不需要修改原本的代码。</p><p>符合开闭原则最典型的设计模式是装饰者模式，它可以动态地将责任附加到对象上，而不用去修改类的代码。</p><h3 id="3-里氏替换原则"><a href="#3-里氏替换原则" class="headerlink" title="3. 里氏替换原则"></a>3. 里氏替换原则</h3><blockquote><p>子类对象必须能够替换掉所有父类对象。</p></blockquote><p>继承是一种 “is a” 关系，子类需要能够当成父类来使用，并且需要比父类更特殊。</p><p>如果不满足这个原则，那么各个子类的行为上就会有很大差异，增加继承体系的复杂度。</p><h3 id="4-接口隔离原则"><a href="#4-接口隔离原则" class="headerlink" title="4. 接口隔离原则"></a>4. 接口隔离原则</h3><blockquote><p>不应该强迫客户依赖于它们不使用的方法。</p></blockquote><p>因此使用多个专门的接口比使用单一的总接口要好。</p><h3 id="5-依赖倒置原则"><a href="#5-依赖倒置原则" class="headerlink" title="5. 依赖倒置原则"></a>5. 依赖倒置原则</h3><blockquote><p>高层模块不应依赖于低层模块，两者都应该依赖于抽象。<br>抽象不应该依赖于细节，细节应该依赖于抽象。</p></blockquote><p>高层模块包含一个应用程序中重要的策略选择和业务模块，如果高层模块依赖于低层模块，那么低层模块的改动就会直接影响到高层模块，从而迫使高层模块也需要改动。</p><p>依赖于抽象意味着：</p><ul><li>任何变量都不应该持有一个指向具体类的指针或者引用；</li><li>任何类都不应该从具体类派生；</li><li>任何方法都不应该覆写它的任何基类中的已经实现的方法。</li></ul><h2 id="其他常见原则"><a href="#其他常见原则" class="headerlink" title="其他常见原则"></a>其他常见原则</h2><h3 id="1-迪米特法则"><a href="#1-迪米特法则" class="headerlink" title="1.迪米特法则"></a>1.迪米特法则</h3><p>迪米特法则又叫作最少知识原则（Least Knowledge Principle），就是说一个对象应当对其他对象有尽可能少的了解。</p><h3 id="2-合成复用原则"><a href="#2-合成复用原则" class="headerlink" title="2. 合成复用原则"></a>2. 合成复用原则</h3><p>尽量使用对象的组合&#x2F;聚合来实现代码复用，而不是通过继承。</p>]]></content>
     
     
-    <categories>
-      
-      <category>Go设计模式</category>
-      
-    </categories>
+    <summary type="html">供复习使用</summary>
     
     
-    <tags>
-      
-      <tag>Go语言</tag>
-      
-      <tag>设计模式</tag>
-      
-    </tags>
+    
+    <category term="Go设计模式" scheme="https://sheep-in-box.github.io/categories/Go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+    <category term="Go语言" scheme="https://sheep-in-box.github.io/tags/Go%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="设计模式" scheme="https://sheep-in-box.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
-  
-  
   <entry>
     <title>test</title>
-    <link href="/2024/07/16/test/"/>
-    <url>/2024/07/16/test/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/16/test/"/>
+    <id>https://sheep-in-box.github.io/2024/07/16/test/</id>
+    <published>2024-07-16T06:18:59.000Z</published>
+    <updated>2024-07-18T01:39:40.447Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>测试</p><p>图片显示<br><img src="/2024/07/16/test/IMG-20240716141949673.png"></p>    <div id="aplayer-KEzZAdSy" class="aplayer aplayer-tag-marker meting-tag-marker"         data-id="1349927611" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"    ></div>]]></content>
     
     
+      
+      
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;&#92;assets&#92;css&#92;APlayer.min.css&quot;&gt;&lt;script src=&quot;&#92;assets&#92;js&#92;APlayer.min.js&quot; cla</summary>
+      
+    
+    
+    
     
   </entry>
   
-  
-  
   <entry>
     <title>Hello World</title>
-    <link href="/2024/07/16/hello-world/"/>
-    <url>/2024/07/16/hello-world/</url>
+    <link href="https://sheep-in-box.github.io/2024/07/16/hello-world/"/>
+    <id>https://sheep-in-box.github.io/2024/07/16/hello-world/</id>
+    <published>2024-07-16T01:28:40.264Z</published>
+    <updated>2024-07-18T01:39:34.561Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new &quot;My New Post&quot;</code></pre></div></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server</code></pre></div></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate</code></pre></div></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy</code></pre></div></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
     
     
+      
+      
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;&#92;assets&#92;css&#92;APlayer.min.css&quot;&gt;&lt;script src=&quot;&#92;assets&#92;js&#92;APlayer.min.js&quot; cla</summary>
+      
+    
+    
+    
     
   </entry>
   
-  
-  
-  
-</search>
+</feed>
